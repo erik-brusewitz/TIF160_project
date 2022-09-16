@@ -216,6 +216,7 @@ void setup() {
 	delay(2000);
 }
 
+int x; 
 
 void loop() {
 
@@ -226,6 +227,6 @@ void loop() {
 
   servo_body_ex(x);
   delay(1000);
-  Serial.print(1);
+  Serial.print);
   
 }
