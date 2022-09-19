@@ -4,13 +4,14 @@ import time
 arduino = serial.Serial(port='/dev/ttyACM0', baudrate=57600, timeout=.1)
     
 def check_for_return_value(value):
-    for i in range(50):
+    for i in range(10):
         data = str(arduino.readline())
         data = data.replace("b", "")
         data = data.replace("'", "")
         print("value = " + str(value) + ", data = " + str(data))
         if data == value:
             return True
+        time.sleep(0.2)
     
     return False
 
