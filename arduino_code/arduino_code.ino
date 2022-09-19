@@ -2,19 +2,19 @@
 #include <Servo.h>
 
 //Servos
-//Servo body; //id 0, pin number 3, min 560, max 2330
-//Servo shoulder; //id 1, pin number 9, min 750, max 2200
-//Servo elbow; //id 2, pin number 10, min 550, max 2400
-//Servo wrist; //id 3, pin number 6, min 950, 2400
-//Servo gripper; //id 4, pin number 11, min 550, max 2150
-//Servo head; //id 5, pin number 5, min 550, max 2340
+//Servo body; //id 0, pin number 3, min 560, max 2330, 180 degrees
+//Servo shoulder; //id 1, pin number 9, min 750, max 2200, 110 degrees
+//Servo elbow; //id 2, pin number 10, min 550, max 2400, 90 degrees (max value is too high, should be around 1700. Low value is backwards, high value is forwards and up.)
+//Servo wrist; //id 3, pin number 6, min 950, 2400, 160 degrees (180 degrees would be nice, maybe wrong values?)
+//Servo gripper; //id 4, pin number 11, min 550, max 2150, 0-33 mm 550=33 mm 2150=0 mm.
+//Servo head; //id 5, pin number 5, min 550, max 2340, 180 degrees
 
 Servo servo_vec[6];
 
 //Init position of all servos
 const int servo_pins[] = {3, 9, 10, 6, 11, 5};
 
-const int pos_init[] = {1700, 1500, 2000, 2200, 1650, 1600}; //can be set to anything really, we'll have to set these to something that looks like a natural starting position.
+const int pos_init[] = {1445, 2200, 1150, 2400, 550, 1445}; //can be set to anything really, we'll have to set these to something that looks like a natural starting position.
 int curr_pos[6]; //current position of all the servos
 
 const int pos_min[] = {560, 750, 550, 950, 550, 550};
@@ -70,26 +70,33 @@ void setup() {
   Serial.print("Ready");
 }
 
+
 String input_data;
-char char_array[6];
-
-
+int input_data_int[5];
 
 void loop() {
   //delay(1000);
 
-  
   while (!Serial.available()) {
     delay(50);
   }
-    //input_data = Serial.readString().toInt();
-  //}
   
   input_data = Serial.readString();
+  Serial.print(input_data);
 
-  /
-  //Serial.print(input_data)
-  /*input_data = Serial.readString().toInt();
+  for (int i = 0; i < 5; i++) {
+    input_data_int[i] = (int) input_data[i] - 48;
+  }
+  servo_id = input_data_int[0];
+  new_pos = 1000 * input_data_int[1] + 100 * input_data_int[2] + 10 * input_data_int[3] + 1 * input_data_int[4];
+
+  move_servo(servo_id, new_pos);
+  
+  delay(1000);
+
+}
+
+/*input_data = Serial.readString().toInt();
   int data_vec[5]; //first element is servo_id, id 1-4 is new position.
   int data = input_data;
   for (int i = 4; i > -1; i--) {
@@ -97,37 +104,4 @@ void loop() {
       data /= 10;
   }
 */
-  servo_id = (int) input_data[1] - 48; 
-  new_pos = 1000 * (int) input_data[1] + 100 * (int) input_data[2] + 10 * (int) input_data[3] + 1 * (int) input_data[4];
-
-  delay(200);
-
-  Serial.print(servo_id);
-  //Serial.print(servo_id);
-  //delay(200);
-
-  //Serial.print(new_pos);
-
-
-
-  /*while(Serial.available() >= 2){
-    servo_id = Serial.readString().toInt();
-    new_pos = Serial.readString().toInt();
-    
-  }*/
-
-  /*while (!Serial.available()) {
-    servo_id = Serial.readString().toInt();
-  }*/
-  
-  
-  
-  //servo_id = Serial.readString().toInt();
-  
-
-  //move_servo(servo_id, new_pos);
-  
-  delay(1000);
-
-}
 
