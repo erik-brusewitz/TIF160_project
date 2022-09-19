@@ -1,8 +1,9 @@
 from math import pi
-import serial
+#import serial
 import time
+import serialCommunication as sc
 
-arduino = serial.Serial(port='/dev/cu.usbmodem11301', baudrate=57600, timeout=.1)
+#arduino = serial.Serial(port='/dev/cu.usbmodem11301', baudrate=57600, timeout=.1)
 #arduino = serial.Serial(port='/dev/ttyACM1', baudrate=57600, timeout=.1)
 
 # def write_read(x):
@@ -24,29 +25,31 @@ class servo:
         self.range = range
         self.move(0)
 
-    def __arduinoCommunication(self):
-        # arduino.write(bytes(self.code, 'utf-8'))
-        # while(arduino.readline() != -1):
-        #     time.sleep(0.01)
-        # arduino.write(bytes(self.position, 'utf-8'))
-        # while(arduino.readline() != -1):
-        #     time.sleep(0.01)
-        instruction = str(self.code * pow(10,4) + self.position)
-        arduino.write(bytes(instruction, 'utf-8'))
-        b = True
-        while b: 
-          data = arduino.readline()
-          if data: 
-            data.rstrip('\n')
-            b = False
-        print("Done")
+    # def __arduinoCommunication(self):
+    #     # arduino.write(bytes(self.code, 'utf-8'))
+    #     # while(arduino.readline() != -1):
+    #     #     time.sleep(0.01)
+    #     # arduino.write(bytes(self.position, 'utf-8'))
+    #     # while(arduino.readline() != -1):
+    #     #     time.sleep(0.01)
+    #     instruction = str(self.code * pow(10,4) + self.position)
+    #     arduino.write(bytes(instruction, 'utf-8'))
+    #     b = True
+    #     while b: 
+    #       data = arduino.readline()
+    #       if data: 
+    #         data.rstrip('\n')
+    #         b = False
+    #     print("Done")
 
     def info(self):
         print("code:", self.code, "angle: ", self.angle, "position: ", self.position, " minPosition:", self.minPosition, "maxPosition: ", self.maxPosition)
 
     def move(self, newAngle):
         self.position = self.minPosition + (newAngle / self.range) * ( self.maxPosition - self.minPosition)
-        self.__arduinoCommunication()
+        print('Start the communication to move servo')
+        sc.send_package( str(self.code * pow(10,4) + self.position))
+        print('End the communication to move servo')
         self.angle = newAngle
         return 0
 
@@ -108,7 +111,7 @@ class robot:
 #     data = arduino.readline()
 #     return data
 
-arduino.write(bytes('Starting \n', 'utf-8'))
+
 hubert  = robot()
 hubert.info('body')
 hubert.move('body',1)
