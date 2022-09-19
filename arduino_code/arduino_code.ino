@@ -84,7 +84,10 @@ void loop() {
   }
   
   input_data = Serial.readString();
-  if (input_data.length() == 5) {
+  if (input_data == "99999") {
+    Serial.print(99999);
+  }
+  else if (input_data.length() == 5) {
     Serial.print(input_data);
 
     for (int i = 0; i < 5; i++) {

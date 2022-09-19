@@ -1,10 +1,9 @@
 from math import pi
-#import serial
 import time
 import serialCommunication as sc
 
 #arduino = serial.Serial(port='/dev/cu.usbmodem11301', baudrate=57600, timeout=.1)
-#arduino = serial.Serial(port='/dev/ttyACM1', baudrate=57600, timeout=.1)
+#arduino = serial.Serial(port='/dev/ttyACM0', baudrate=57600, timeout=.1)
 
 # def write_read(x):
 #     arduino.write(bytes(x, 'utf-8'))
@@ -18,21 +17,21 @@ import serialCommunication as sc
 # - .info() to get the information about the servo 
 # - .move( angle ) move the servo to that specific angle
 class servo:
-    def __init__(self, code, minPosition, maxPosition, range):
-        self.code = code
+    def __init__(self, servo_id, minPosition, maxPosition, range):
+        self.servo_id = servo_id
         self.minPosition = minPosition
         self.maxPosition = maxPosition
         self.range = range
         self.move(0)
 
     # def __arduinoCommunication(self):
-    #     # arduino.write(bytes(self.code, 'utf-8'))
+    #     # arduino.write(bytes(self.servo_id, 'utf-8'))
     #     # while(arduino.readline() != -1):
     #     #     time.sleep(0.01)
     #     # arduino.write(bytes(self.position, 'utf-8'))
     #     # while(arduino.readline() != -1):
     #     #     time.sleep(0.01)
-    #     instruction = str(self.code * pow(10,4) + self.position)
+    #     instruction = str(self.servo_id * pow(10,4) + self.position)
     #     arduino.write(bytes(instruction, 'utf-8'))
     #     b = True
     #     while b: 
@@ -43,14 +42,21 @@ class servo:
     #     print("Done")
 
     def info(self):
-        print("code:", self.code, "angle: ", self.angle, "position: ", self.position, " minPosition:", self.minPosition, "maxPosition: ", self.maxPosition)
+        print("servo_id:", self.servo_id, "angle: ", self.angle, "position: ", self.position, " minPosition:", self.minPosition, "maxPosition: ", self.maxPosition)
 
     def move(self, newAngle):
-        self.position = self.minPosition + (newAngle / self.range) * ( self.maxPosition - self.minPosition)
         print('Start the communication to move servo')
-        sc.send_package( str(self.code * pow(10,4) + self.position))
+        self.position = int(self.minPosition + (newAngle / self.range) * ( self.maxPosition - self.minPosition))
+        position_string = str(self.position)
+        if self.position < 550 or self.position > 2400:
+            print("Error, position is too large or too low")
+        if self.position < 1000:
+            sc.send_package(str(self.servo_id) + "0" + str(self.position))
+        else:
+            sc.send_package(str(self.servo_id) + str(self.position))
         print('End the communication to move servo')
         self.angle = newAngle
+            
         return 0
 
 # //Servos
@@ -67,11 +73,11 @@ class servo:
 class robot:
     def __init__(self):
         self.bodyMotor = servo(0,560,2330,pi)
-        # self.shoulderMotor = servo(1,750,2200,pi)
-        # self.elbowMotor = servo(2,550,2400,pi)
-        # self.wristMotor = servo(3,950,2400,pi)
-        # self.gripperMotor = servo(4,550,2150,pi)
-        # self.headMotor = servo(5,550,2340,pi)
+        self.shoulderMotor = servo(1,750,2200,pi)
+        self.elbowMotor = servo(2,550,2400,pi)
+        self.wristMotor = servo(3,950,2400,pi)
+        self.gripperMotor = servo(4,550,2150,pi)
+        self.headMotor = servo(5,550,2340,pi)
 
     def __motorC(self, motor):
         if ( motor == 'head'):
@@ -89,6 +95,7 @@ class robot:
         else: 
             r = 1
         return r
+
 
     def move(self, motor, angle):
         r = self.__motorC(motor)
@@ -111,9 +118,12 @@ class robot:
 #     data = arduino.readline()
 #     return data
 
-
-hubert  = robot()
+sc.initialize_communication()
+print("Initializing robot software")
+hubert = robot()
+print("AAAAAAAAAAAAAAAAAAA")
 hubert.info('body')
+print("BBBBBBBBBBBBBBBBBBBB")
 hubert.move('body',1)
 # hubert.move('head', 1)
 # hubert.info('head')

@@ -15,26 +15,6 @@ def check_for_return_value(value):
     
     return False
 
-def different_packages():
-    while True:
-        time.sleep(1)
-
-        servo_id = 3
-        print("sent 3")
-        arduino.write(bytes(str(servo_id), 'utf-8'))
-        if not check_for_return_value(servo_id):
-            continue
-        
-        time.sleep(1)
-        
-        new_pos = 3
-        print("sent 1500")
-        arduino.write(bytes(str(new_pos), 'utf-8'))
-        if not check_for_return_value(new_pos):
-            continue
-            
-        time.sleep(1)
-    
 def same_package():
     while True:
         time.sleep(1)
