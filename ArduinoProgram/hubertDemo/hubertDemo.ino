@@ -59,6 +59,7 @@ void servo_body_ex(const int new_pos) {
     delay(20);
   }
   curr_pos[0] = now;
+  Serial.print(curr_pos[0]);
   delay(10);
 }
 
@@ -220,15 +221,21 @@ int x;
 
 void loop() {
 
-  delay(0.01);
-
+  delay(0.1);
+  
   while (!Serial.available());
   x = Serial.readString().toInt();
-  Serial.print("-1");
-  delay(0.02);
-  x = Serial.readString().toInt();
-  servo_body_ex(x);
-  Serial.print("-1");
+  if (x < 2330)
+  {
+    servo_body_ex(x);
+    Serial.print("Done");
+  } else {
+    Serial.print("Fail");
+  }
   
+  
+  
+
+  delay("1000");
   
 }

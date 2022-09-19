@@ -2,14 +2,14 @@ from math import pi
 import serial
 import time
 
-#arduino = serial.Serial(port='/dev/cu.usbmodem11301', baudrate=57600, timeout=.1)
-arduino = serial.Serial(port='/dev/ttyACM1', baudrate=57600, timeout=.1)
+arduino = serial.Serial(port='/dev/cu.usbmodem11301', baudrate=57600, timeout=.1)
+#arduino = serial.Serial(port='/dev/ttyACM1', baudrate=57600, timeout=.1)
 
-def write_read(x):
-    arduino.write(bytes(x, 'utf-8'))
-    time.sleep(1)
-    data = arduino.readline()
-    return data
+# def write_read(x):
+#     arduino.write(bytes(x, 'utf-8'))
+#     time.sleep(1)
+#     data = arduino.readline()
+#     return data
 
 
 # class that is used to controll the servo motor of the robot,
@@ -25,15 +25,22 @@ class servo:
         self.move(0)
 
     def __arduinoCommunication(self):
-        arduino.write(bytes(self.code, 'utf-8'))
-        while(arduino.readline() != -1):
-            time.sleep(0.01)
-        arduino.write(bytes(self.position, 'utf-8'))
-        while(arduino.readline() != -1):
-            time.sleep(0.01)
+        # arduino.write(bytes(self.code, 'utf-8'))
+        # while(arduino.readline() != -1):
+        #     time.sleep(0.01)
+        # arduino.write(bytes(self.position, 'utf-8'))
+        # while(arduino.readline() != -1):
+        #     time.sleep(0.01)
+        instruction = str(self.code * pow(10,4) + self.position)
+        arduino.write(bytes(instruction, 'utf-8'))
+        b = True
+        while b: 
+          data = arduino.readline()
+          if data: 
+            data.rstrip('\n')
+            b = False
+        print("Done")
 
-    def __write(self):
-        arduino.write(bytes(, 'utf-8'))
     def info(self):
         print("code:", self.code, "angle: ", self.angle, "position: ", self.position, " minPosition:", self.minPosition, "maxPosition: ", self.maxPosition)
 
@@ -101,9 +108,10 @@ class robot:
 #     data = arduino.readline()
 #     return data
 
-
+arduino.write(bytes('Starting \n', 'utf-8'))
 hubert  = robot()
 hubert.info('body')
+hubert.move('body',1)
 # hubert.move('head', 1)
 # hubert.info('head')
 # hubert.move('shoulder',2)
