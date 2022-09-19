@@ -220,13 +220,15 @@ int x;
 
 void loop() {
 
-  delay(1000);
+  delay(0.01);
 
   while (!Serial.available());
   x = Serial.readString().toInt();
-
+  Serial.print("-1");
+  delay(0.02);
+  x = Serial.readString().toInt();
   servo_body_ex(x);
-  delay(1000);
-  Serial.print);
+  Serial.print("-1");
+  
   
 }
