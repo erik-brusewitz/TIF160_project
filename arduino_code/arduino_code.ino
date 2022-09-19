@@ -22,9 +22,11 @@ const int pos_max[] = {2330, 2200, 2400, 2400, 2150, 2340};
 
 int servo_id;
 int new_pos;
+String input_data;
+int input_data_int[5];
 
 
-void move_servo(const int servo_id, const int new_pos) {
+bool move_servo(const int servo_id, const int new_pos) {
   if (new_pos <= pos_max[servo_id] && new_pos >= pos_min[servo_id]) {
     int diff, steps, now, CurrPwm, NewPwm, delta = 6;
 
@@ -36,7 +38,6 @@ void move_servo(const int servo_id, const int new_pos) {
     /* determine interation "diff" from old to new position */
     diff = (NewPwm - CurrPwm)/abs(NewPwm - CurrPwm); // Should return +1 if NewPwm is bigger than CurrPwm, -1 otherwise.
     steps = abs(NewPwm - CurrPwm);
-    delay(10);
 
     for (int i = 0; i < steps; i += delta) {
       now = now + delta*diff;
@@ -44,7 +45,12 @@ void move_servo(const int servo_id, const int new_pos) {
       delay(20);
     }
     curr_pos[servo_id] = now;
-    delay(10);
+    return true;
+
+  }
+  else {
+    Serial.print("Error: servo position not within required range");
+    return false;
   }
 }
 
@@ -70,10 +76,6 @@ void setup() {
   Serial.print("Ready");
 }
 
-
-String input_data;
-int input_data_int[5];
-
 void loop() {
   //delay(1000);
 
@@ -82,26 +84,22 @@ void loop() {
   }
   
   input_data = Serial.readString();
-  Serial.print(input_data);
+  if (input_data.length() == 5) {
+    Serial.print(input_data);
 
-  for (int i = 0; i < 5; i++) {
-    input_data_int[i] = (int) input_data[i] - 48;
+    for (int i = 0; i < 5; i++) {
+      input_data_int[i] = (int) input_data[i] - 48;
+    }
+    servo_id = input_data_int[0];
+    new_pos = 1000 * input_data_int[1] + 100 * input_data_int[2] + 10 * input_data_int[3] + 1 * input_data_int[4];
+
+    move_servo(servo_id, new_pos);
+    
+  } else {
+    input_data = "";
+    Serial.print("Error: data was not 5 characters long");
   }
-  servo_id = input_data_int[0];
-  new_pos = 1000 * input_data_int[1] + 100 * input_data_int[2] + 10 * input_data_int[3] + 1 * input_data_int[4];
-
-  move_servo(servo_id, new_pos);
-  
-  delay(1000);
+    delay(1000);
 
 }
-
-/*input_data = Serial.readString().toInt();
-  int data_vec[5]; //first element is servo_id, id 1-4 is new position.
-  int data = input_data;
-  for (int i = 4; i > -1; i--) {
-      data_vec[i] = data%10;
-      data /= 10;
-  }
-*/
 
