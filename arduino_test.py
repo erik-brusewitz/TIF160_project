@@ -42,8 +42,10 @@ def same_package():
         new_pos = 1500
         data = str(servo_id) + str(new_pos)
         arduino.write(bytes(data, 'utf-8'))
-        if not check_for_return_value(data):
-            print("data was not sent correctly")
+        if check_for_return_value(data):
+            print("Data sent and received successfully")
+        else:
+            print("Data sending failed")
             continue
             
         time.sleep(1)

@@ -71,6 +71,8 @@ void setup() {
 }
 
 String input_data;
+char char_array[5];
+
 
 
 void loop() {
@@ -82,7 +84,11 @@ void loop() {
   }*/
   //input_data = Serial.readString().toInt();
   input_data = Serial.readString();
-  Serial.print(input_data);
+  //input_data.toCharArray(char_array, 6);
+  
+  
+  
+  //Serial.print(input_data);
   /*int data_vec[5]; //first element is servo_id, id 1-4 is new position.
   int data = input_data;
   for (int i = 4; i > -1; i--) {
@@ -91,16 +97,15 @@ void loop() {
   }
 */
 
-  servo_id = (int) input_data[0] + 1;
+  servo_id = input_data[2];
   new_pos = 1000 * (int) input_data[1] + 100 * (int) input_data[2] + 10 * (int) input_data[3] + 1 * (int) input_data[4];
 
   delay(200);
 
   Serial.print(servo_id);
 
-  delay(200);
+  //delay(200);
 
-  Serial.print(input_data);
   //Serial.print(new_pos);
 
 
