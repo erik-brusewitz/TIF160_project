@@ -14,10 +14,10 @@ Servo servo_vec[6];
 //Init position of all servos
 const int servo_pins[] = {3, 9, 10, 6, 11, 5};
 
-const int pos_init[] = {1445, 2200, 1150, 2400, 550, 1445}; //can be set to anything really, we'll have to set these to something that looks like a natural starting position.
+const int pos_init[] = {1445, 2200, 1150, 950, 550, 1445}; //can be set to anything really, we'll have to set these to something that looks like a natural starting position.
 int curr_pos[6]; //current position of all the servos
 
-const int pos_min[] = {560, 750, 550, 950, 550, 550};
+const int pos_min[] = {560, 750, 550, 550, 550, 550};
 const int pos_max[] = {2330, 2200, 2400, 2400, 2150, 2340};
 
 int servo_id;
