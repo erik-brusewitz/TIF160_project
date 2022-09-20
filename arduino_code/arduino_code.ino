@@ -5,7 +5,7 @@
 //Servo body; //id 0, pin number 3, min 560, max 2330, 180 degrees
 //Servo shoulder; //id 1, pin number 9, min 750, max 2200, 110 degrees
 //Servo elbow; //id 2, pin number 10, min 550, max 2400, 90 degrees (max value is too high, should be around 1700. Low value is backwards, high value is forwards and up.)
-//Servo wrist; //id 3, pin number 6, min 950, 2400, 160 degrees (180 degrees would be nice, maybe wrong values?)
+//Servo wrist; //id 3, pin number 6, min 550, 2400, 160 degrees (950 is 0 degrees)
 //Servo gripper; //id 4, pin number 11, min 550, max 2150, 0-33 mm 550=33 mm 2150=0 mm.
 //Servo head; //id 5, pin number 5, min 550, max 2340, 180 degrees
 
@@ -14,7 +14,7 @@ Servo servo_vec[6];
 //Init position of all servos
 const int servo_pins[] = {3, 9, 10, 6, 11, 5};
 
-const int pos_init[] = {1445, 2200, 1150, 950, 550, 1445}; //can be set to anything really, we'll have to set these to something that looks like a natural starting position.
+const int pos_init[] = {1445, 2200, 1150, 960, 550, 1445}; //can be set to anything really, we'll have to set these to something that looks like a natural starting position.
 int curr_pos[6]; //current position of all the servos
 
 const int pos_min[] = {560, 750, 550, 550, 550, 550};

@@ -1,4 +1,4 @@
-import robot as rob
+import robotControl as rob
 
 rob.sc.initialize_communication()
 print("Initializing robot software")
