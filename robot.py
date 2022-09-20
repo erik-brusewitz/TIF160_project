@@ -2,17 +2,7 @@ from math import pi
 import time
 import serialCommunication as sc
 
-#arduino = serial.Serial(port='/dev/cu.usbmodem11301', baudrate=57600, timeout=.1)
-#arduino = serial.Serial(port='/dev/ttyACM0', baudrate=57600, timeout=.1)
-
-# def write_read(x):
-#     arduino.write(bytes(x, 'utf-8'))
-#     time.sleep(1)
-#     data = arduino.readline()
-#     return data
-
-
-# class that is used to controll the servo motor of the robot,
+# class that is used to control the servo motor of the robot,
 # it has different function:
 # - .info() to get the information about the servo 
 # - .move( angle ) move the servo to that specific angle
@@ -23,23 +13,6 @@ class servo:
         self.maxPosition = maxPosition
         self.range = range
         self.move(0)
-
-    # def __arduinoCommunication(self):
-    #     # arduino.write(bytes(self.servo_id, 'utf-8'))
-    #     # while(arduino.readline() != -1):
-    #     #     time.sleep(0.01)
-    #     # arduino.write(bytes(self.position, 'utf-8'))
-    #     # while(arduino.readline() != -1):
-    #     #     time.sleep(0.01)
-    #     instruction = str(self.servo_id * pow(10,4) + self.position)
-    #     arduino.write(bytes(instruction, 'utf-8'))
-    #     b = True
-    #     while b: 
-    #       data = arduino.readline()
-    #       if data: 
-    #         data.rstrip('\n')
-    #         b = False
-    #     print("Done")
 
     def info(self):
         print("servo_id:", self.servo_id, "angle: ", self.angle, "position: ", self.position, " minPosition:", self.minPosition, "maxPosition: ", self.maxPosition)
@@ -113,24 +86,3 @@ class robot:
             r.info()
         else: 
             return 1
-
-#     time.sleep(1)
-#     data = arduino.readline()
-#     return data
-
-sc.initialize_communication()
-print("Initializing robot software")
-hubert = robot()
-print("AAAAAAAAAAAAAAAAAAA")
-hubert.info('body')
-print("BBBBBBBBBBBBBBBBBBBB")
-hubert.move('body',1)
-# hubert.move('head', 1)
-# hubert.info('head')
-# hubert.move('shoulder',2)
-# hubert.info('shoulder')
-
-# while True:
-#     num = input("Enter a number: ") # Taking input from user
-#     value = write_read(num)
-#     print(value) # printing the value
