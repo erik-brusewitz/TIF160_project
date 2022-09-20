@@ -1,8 +1,8 @@
 import robot as rob
 
-sc.initialize_communication()
+rob.sc.initialize_communication()
 print("Initializing robot software")
-hubert = robot()
+hubert = rob.robot()
 print("AAAAAAAAAAAAAAAAAAA")
 hubert.info('body')
 print("BBBBBBBBBBBBBBBBBBBB")
