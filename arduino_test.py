@@ -15,7 +15,7 @@ def check_for_return_value(value):
     
     return False
 
-def same_package():
+def auto_send():
     while True:
         time.sleep(1)
 
@@ -44,4 +44,4 @@ def commandline_test():
         time.sleep(1)
 
 commandline_test()
-#same_package()
+#auto_send()
