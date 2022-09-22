@@ -14,10 +14,10 @@ class servo:
         self.range = abs(maxAngle - minAngle)
         self.minAngle = minAngle
         self.maxAngle = maxAngle
-        self.move(0)
+        #self.move(0)
 
     def info(self):
-        print("servo_id:", self.servo_id, "angle: ", self.angle, "position: ", self.position, " minPosition:", self.minPosition, "maxPosition: ", self.maxPosition)
+        print("servo_id:", self.servo_id, "minAngle: ", self.minAngle, "maxAngle: ", self.maxAngle, " minPosition:", self.minPosition, "maxPosition: ", self.maxPosition)
 
     def move(self, newAngle):
         print('Start the communication to move servo')
@@ -75,6 +75,7 @@ class robot:
 
     def move(self, motor, angle):
         r = self.__motorC(motor)
+        #print(motor)
         
         if r != 1:
             r.move(angle)
