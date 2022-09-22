@@ -56,18 +56,18 @@ class robot:
         self.headMotor = servo(5,550,2340,0,pi) #0 is left, pi is right
 
     def __motorC(self, motor):
-        if ( motor == 'head'):
-            r = self.headMotor
+        if ( motor == 'body'):
+            r = self.bodyMotor
         elif ( motor == 'shoulder'):
             r = self.shoulderMotor
         elif ( motor == 'elbow'):
-            r = self.shoulderMotor
+            r = self.elbowMotor
         elif ( motor == 'wrist'):
-            r = self.shoulderMotor
+            r = self.wristMotor
         elif ( motor == 'gripper'):
-            r = self.shoulderMotor
+            r = self.gripperMotor
         elif ( motor == 'head'):
-            r = self.shoulderMotor
+            r = self.headMotor
         else: 
             r = 1
         return r
