@@ -1,4 +1,4 @@
-from math import pi
+from math import *
 import time
 import serialCommunication as sc
 
@@ -11,7 +11,9 @@ class servo:
         self.servo_id = servo_id
         self.minPosition = minPosition
         self.maxPosition = maxPosition
-        self.range = range
+        self.range = abs(maxAngle - minAngle)
+        self.minAngle = minAngle
+        self.maxAngle = maxAngle
         self.move(0)
 
     def info(self):
@@ -19,7 +21,8 @@ class servo:
 
     def move(self, newAngle):
         print('Start the communication to move servo')
-        self.position = int(self.minPosition + (newAngle / self.range) * ( self.maxPosition - self.minPosition))
+        tmp = newAngle - self.minAngle
+        self.position = int(self.minPosition + (tmp / self.range) * ( self.maxPosition - self.minPosition))
         position_string = str(self.position)
         if self.position < 550 or self.position > 2400:
             print("Error, position is too large or too low")
