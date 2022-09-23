@@ -2,7 +2,7 @@ import numpy as np
 import cv2, math
 from color_detection import *
 
-def Shape_dectection():
+def Shape_dectection(shape):
     cap = cv2.VideoCapture(1,cv2.CAP_DSHOW) #cv2.CAP_DSHOW is used to reduce the time taken to open the ext. camera
     if not cap.isOpened():
         print("Cannot open camera")
@@ -12,6 +12,7 @@ def Shape_dectection():
     while True:
         # Capture frame-by-frame
         ret, frame = cap.read()
+        cv2.imwrite("preview.jpg", frame)
         # if frame is read correctly ret is True
         if not ret:
             print("Can't receive frame (stream end?). Exiting ...")
@@ -24,7 +25,7 @@ def Shape_dectection():
         i = 0
         coord_matrix=[[],[]]
         (color_centre_x, color_centre_y) = color_detection(frame)
-        arm_coord=[color_centre_x,color_centre_y]
+        arm_coord=[color_centre_x/640,color_centre_y/480]
         coord_matrix[0]=arm_coord
         # print(arm_coord)
         # list for storing names of shapes
@@ -57,22 +58,36 @@ def Shape_dectection():
                     if len(approx) == 3:
                         cv2.putText(frame, 'Triangle', (x, y),
                                     cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+                        if shape =='Triangle':
+                            tria_x=x; tria_y=y
+                            tria_c=[tria_x/640,tria_y/480]
+                            coord_matrix[1]=tria_c
                 
                     elif len(approx) == 4:
                         cv2.putText(frame, 'Quadrilateral', (x, y),
                                     cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
-                        quad_x=x; quad_y=y
-                        quad_c=[quad_x,quad_y]
-                        coord_matrix[1]=quad_c
+                        if shape == 'Quadrilateral':
+                            quad_x=x; quad_y=y
+                            quad_c=[quad_x/640,quad_y/480]
+                            coord_matrix[1]=quad_c
 
                     elif len(approx) == 5:
 
                         cv2.putText(frame, 'Pentagon', (x, y),
                                     cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+                        if shape =='Pentagon':
+                            pent_x=x; pent_y=y
+                            pent_c=[pent_x/640,pent_y/480]
+                            coord_matrix[1]=pent_c
             
                     elif len(approx) == 6:
                         cv2.putText(frame, 'Hexagon', (x, y),
                                     cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+                        if shape =='Hexagon':
+                            hexa_x=x; hexa_y=y
+                            hexa_c=[hexa_x/640,hexa_y/480]
+                            coord_matrix[1]=hexa_c
+            
             
                     else:
                         if dist <= 120:
