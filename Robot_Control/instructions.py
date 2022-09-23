@@ -1,12 +1,13 @@
-import robotControl as rob
+import Robot_Control.robotControl as rob
 import Image_Analysis.Shape_detection as vision
+from math import *
 
 def initialize_robot():
-    rob.sc.initialize_communication()
+    #rob.sc.initialize_communication()
     print("Initializing robot software")
-    hubert = rob.robot()
+    return rob.robot()
 
-def set_default_position():
+def set_default_position(hubert):
     hubert.move("body", pi/2)
     hubert.move("shoulder", 4*pi/9)
     hubert.move("elbow", -3*pi/18)
@@ -14,7 +15,7 @@ def set_default_position():
     hubert.move("gripper", 0)
     hubert.move("head", pi/2)
 
-def find_shape(shape):
+def find_shape(hubert, shape):
     print("Searching for " + shape + "...")
     hubert.move("body", pi/2)
     hubert.move("head", pi/4)
@@ -27,17 +28,17 @@ def find_shape(shape):
     print(shape + " not found")
     find_shape(shape)
     
-def find_hand():
+def find_hand(hubert):
     print("Searching for hand...")
     a = hubert.get_angle("body")
     b = hubert.get_angle("head")
     
-def move_hand_to_position(hand_pos, target_pos):
+def move_hand_to_position(hubert, hand_pos, target_pos):
     
     #put inverse kinematic equations here...
     return True
     
-def find_container(shape):
+def find_container(hubert, shape):
     print("Searching for container to " + shape + "...")
     hubert.move("body", pi)
     for i in range(16):
@@ -50,9 +51,9 @@ def find_container(shape):
     find_container(shape)
     
     
-def get_shape(shape):
+def get_shape(hubert, shape):
    
-    set_default_position()
+    set_default_position(hubert)
     
     print("Searching for " + shape + "...")
     coordinate_data = vision.getCoordinates(shape)
@@ -73,7 +74,7 @@ def get_shape(shape):
     hand_coordinates = coordinate_data[0]
     shape_coordinates = coordinate_data[0]
     
-    if move_hand_to_position(hand_coordinates, shape_coordinates): #todo
+    if move_hand_to_position(hubert, hand_coordinates, shape_coordinates): #todo
         print("Gripping shape...")
         hubert.move("gripper", 0.9)
         hubert.move("shoulder", 0.1)
@@ -86,7 +87,7 @@ def get_shape(shape):
             
         container_coordinaates = vision.get_container_coordinates(shape)
         print("Dropping shape in container...")
-        move_hand_to_position(hand_coordinates, container_coordinaates)
+        move_hand_to_position(hubert,hand_coordinates, container_coordinaates)
         hubert.move("gripper, 0")
         
         print("#################")

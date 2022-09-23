@@ -1,6 +1,6 @@
 from math import *
 import time
-import serialCommunication as sc
+import Robot_Control.serialCommunication as sc
 
 # class that is used to control the servo motor of the robot,
 # it has different function:
@@ -14,7 +14,7 @@ class servo:
         self.range = abs(maxAngle - minAngle)
         self.minAngle = minAngle
         self.maxAngle = maxAngle
-        self.currentAngle
+        self.currentAngle = minAngle #default is set to minAngle, should probably be something else?
 
     def info(self):
         print("servo_id:", self.servo_id, "\nMin Angle: ", self.minAngle, "\nMax Angle: ", self.maxAngle, "\nMin Position:", self.minPosition, "\nMax Position: ", self.maxPosition, "\nCurrent Angle: ", self.currentAngle)

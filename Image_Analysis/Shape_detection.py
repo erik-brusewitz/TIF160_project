@@ -1,6 +1,6 @@
 import numpy as np
 import cv2, math
-from color_detection import *
+from Image_Analysis.color_detection import *
 
 def Shape_dectection():
     cap = cv2.VideoCapture(1,cv2.CAP_DSHOW) #cv2.CAP_DSHOW is used to reduce the time taken to open the ext. camera
