@@ -29,6 +29,8 @@ def find_shape(shape):
     
 def find_hand():
     print("Searching for hand...")
+    a = hubert.get_angle("body")
+    b = hubert.get_angle("head")
     
 def move_hand_to_position(hand_pos, target_pos):
     

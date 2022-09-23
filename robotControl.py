@@ -34,6 +34,9 @@ class servo:
         self.currentAngle = newAngle
             
         return 0
+        
+    def get_angle(self):
+        return self.currentAngle
 
 # //Servos
 # //Servo body; //id 0, pin number 3, min 560, max 2330
@@ -90,3 +93,7 @@ class robot:
             r.info()
         else: 
             return 1
+            
+    def get_angle(self, motor):
+        r = self.__motorC(motor)
+        return r.get_angle()
