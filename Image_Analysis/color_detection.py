@@ -4,20 +4,21 @@
 import numpy as np
 import cv2
 
+def color_detection(imageFrame):
+			
+	# Capturing video through webcam
+	# cap = cv2.VideoCapture(1,cv2.CAP_DSHOW) #cv2.CAP_DSHOW is used to reduce the time taken to open the ext. camera
+	# if not cap.isOpened():
+	# 	print("Cannot open camera")
+	# 	exit()
 
-# Capturing video through webcam
-cap = cv2.VideoCapture(1,cv2.CAP_DSHOW) #cv2.CAP_DSHOW is used to reduce the time taken to open the ext. camera
-if not cap.isOpened():
-	print("Cannot open camera")
-	exit()
 
+	# Start a while loop
 
-# Start a while loop
-while(1):
 	
 	# Reading the video from the
 	# webcam in image frames
-	_, imageFrame = cap.read()
+	#_, imageFrame = cap.read()
 
 	# Convert the imageFrame in
 	# BGR(RGB color space) to
@@ -25,7 +26,7 @@ while(1):
 	# color space
 	hsvFrame = cv2.cvtColor(imageFrame, cv2.COLOR_BGR2HSV)
 
-	# Set range for red color and
+	# Set range for red color to kill it and
 	# define mask
 	red_lower = np.array([136, 87, 111], np.uint8)
 	red_upper = np.array([136, 87, 111], np.uint8) #[180, 255, 255],
@@ -68,7 +69,7 @@ while(1):
 	contours, hierarchy = cv2.findContours(red_mask,
 										cv2.RETR_TREE,
 										cv2.CHAIN_APPROX_SIMPLE)
-	
+	a = b = 0
 	for pic, contour in enumerate(contours):
 		area = cv2.contourArea(contour)
 		if(area > 300):
@@ -88,17 +89,15 @@ while(1):
 	
 	for pic, contour in enumerate(contours):
 		area = cv2.contourArea(contour)
-		
+		M = cv2.moments(contour)
+		if M['m00'] != 0.0:
+			a = int(M['m10']/M['m00']) #finding centre points of the detected color
+			b = int(M['m01']/M['m00'])
 		if(area > 300):
 			
 			x, y, w, h = cv2.boundingRect(contour)
-			M = cv2.moments(contour)
-			if M['m00'] != 0.0:
-				a = int(M['m10']/M['m00'])
-				b = int(M['m01']/M['m00'])
-			print(a)
-			print(b)
-
+			
+			
 			imageFrame = cv2.rectangle(imageFrame, (x, y),
 									(x + w, y + h),
 									(0, 255, 0), 2)
@@ -116,17 +115,26 @@ while(1):
 		area = cv2.contourArea(contour)
 		if(area > 300):
 			x, y, w, h = cv2.boundingRect(contour)
+			M = cv2.moments(contour)
+			if M['m00'] != 0.0:
+				a = int(M['m10']/M['m00']) #finding centre points of the detected color
+				b = int(M['m01']/M['m00'])
+			
 			imageFrame = cv2.rectangle(imageFrame, (x, y),
 									(x + w, y + h),
 									(255, 0, 0), 2)
 			
-			cv2.putText(imageFrame, "Blue Colour", (x, y),
+			cv2.putText(imageFrame, "Blue Colour", (a, b),
 						cv2.FONT_HERSHEY_SIMPLEX,
 						1.0, (255, 0, 0))
 			
 	# Program Termination
-	cv2.imshow("Multiple Color Detection in Real-TIme", imageFrame)
-	if cv2.waitKey(10) & 0xFF == ord('q'):
-		cap.release()
-		cv2.destroyAllWindows()
-		break
+	#cv2.imshow("Multiple Color Detection in Real-TIme", imageFrame)
+	# if cv2.waitKey(10) & 0xFF == ord('q'):
+	# 	#cap.release()
+	# 	$cv2.destroyAllWindows()
+	# 	break
+	if a !=None:
+		return(a,b)
+	else:
+		return(9999, 9999)
