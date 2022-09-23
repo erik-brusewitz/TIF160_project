@@ -14,10 +14,10 @@ class servo:
         self.range = abs(maxAngle - minAngle)
         self.minAngle = minAngle
         self.maxAngle = maxAngle
-        #self.move(0)
+        self.currentAngle
 
     def info(self):
-        print("servo_id:", self.servo_id, "minAngle: ", self.minAngle, "maxAngle: ", self.maxAngle, " minPosition:", self.minPosition, "maxPosition: ", self.maxPosition)
+        print("servo_id:", self.servo_id, "\nMin Angle: ", self.minAngle, "\nMax Angle: ", self.maxAngle, "\nMin Position:", self.minPosition, "\nMax Position: ", self.maxPosition, "\nCurrent Angle: ", self.currentAngle)
 
     def move(self, newAngle):
         print('Start the communication to move servo')
@@ -31,7 +31,7 @@ class servo:
         else:
             sc.send_package(str(self.servo_id) + str(self.position))
         print('End the communication to move servo')
-        self.angle = newAngle
+        self.currentAngle = newAngle
             
         return 0
 
