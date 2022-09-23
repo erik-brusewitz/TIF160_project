@@ -14,10 +14,10 @@ class servo:
         self.range = abs(maxAngle - minAngle)
         self.minAngle = minAngle
         self.maxAngle = maxAngle
-        self.move(0)
+        #self.move(0)
 
     def info(self):
-        print("servo_id:", self.servo_id, "angle: ", self.angle, "position: ", self.position, " minPosition:", self.minPosition, "maxPosition: ", self.maxPosition)
+        print("servo_id:", self.servo_id, "minAngle: ", self.minAngle, "maxAngle: ", self.maxAngle, " minPosition:", self.minPosition, "maxPosition: ", self.maxPosition)
 
     def move(self, newAngle):
         print('Start the communication to move servo')
@@ -50,7 +50,7 @@ class robot:
     def __init__(self):
         self.bodyMotor = servo(0,560,2330,0,pi) #0 is left facing, pi is right facing
         self.shoulderMotor = servo(1,750,2200,0,8*pi/9) #0 is up, 8*pi/9 (160 degrees) is down
-        self.elbowMotor = servo(2,1100,1600,0,7*pi/36) # 1100 is 0 degrees, 550 is aboput -50 degrees, 2400 is the max value, but the servo cant handle higher than 1600 = 35 degrees.
+        self.elbowMotor = servo(2,550,1600,-5*pi/18,7*pi/36) # 1100 is 0 degrees, 550 is aboput -50 degrees, 2400 is the max value, but the servo cant handle higher than 1600 = 35 degrees.
         self.wristMotor = servo(3,550,2400,-0.22*pi,0.78*pi) #-22pi is close to the 0 positon at 950, then it rotates counter clockwise when moving to 0.78pi.
         self.gripperMotor = servo(4,550,2150,0,1) #0 is open, 1 is closed
         self.headMotor = servo(5,550,2340,0,pi) #0 is left, pi is right
@@ -75,6 +75,7 @@ class robot:
 
     def move(self, motor, angle):
         r = self.__motorC(motor)
+        #print(motor)
         
         if r != 1:
             r.move(angle)
