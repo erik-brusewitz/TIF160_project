@@ -15,6 +15,17 @@ while True:
         break
 
     imgGry = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    # color space
+    hsvFrame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    # Set range for green color and 
+    # define mask
+    green_lower = np.array([25, 52, 72], np.uint8)
+    green_upper = np.array([102, 255, 255], np.uint8)
+    green_mask = cv2.inRange(hsvFrame, green_lower, green_upper)
+
+
+    
+
     thrash  = cv2.adaptiveThreshold(imgGry, 255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 15, 8)
     contours , _ = cv2.findContours(thrash, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     i = 0
