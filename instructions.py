@@ -28,6 +28,7 @@ def find_hand():
     print("Searching for hand...")
     
 def move_hand_to_position(hand_pos, target_pos):
+    
     #put inverse kinematic equations here...
     return True
     
