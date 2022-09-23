@@ -20,7 +20,7 @@ def find_shape(hubert, shape):
     hubert.move("body", pi/2)
     hubert.move("head", pi/4)
     for i in range(16):
-        coordinate_data = vision.getCoordinates(shape)
+        coordinate_data = vision.Shape_dectection(shape)
         if coordinate_data[0] != [2,2]:
             print("Found a " + shape)
             return True
@@ -42,7 +42,8 @@ def find_container(hubert, shape):
     print("Searching for container to " + shape + "...")
     hubert.move("body", pi)
     for i in range(16):
-        container_coordinaates = vision.get_container_coordinates(shape)
+        #container_coordinaates = vision.get_container_coordinates(shape)
+        container_coordinaates = Shape_dectection(shape) #temp, will not work, need specific get_container_coordinates function
         if container_coordinaates != [2,2]:
             print("Found container for " + shape)
             return True
@@ -56,21 +57,21 @@ def get_shape(hubert, shape):
     set_default_position(hubert)
     
     print("Searching for " + shape + "...")
-    coordinate_data = vision.getCoordinates(shape)
+    coordinate_data = vision.Shape_dectection(shape)
     hand_coordinates = coordinate_data[0]
     shape_coordinates = coordinate_data[0]
     
     if shape_coordinates == [2,2]:
         find_shape(shape)
         
-    coordinate_data = vision.getCoordinates(shape)
+    coordinate_data = vision.Shape_dectection(shape)
     hand_coordinates = coordinate_data[0]
     shape_coordinates = coordinate_data[0]
         
     if hand_coordinates == [2,2]:
         find_hand() #todo
         
-    coordinate_data = vision.getCoordinates(shape)
+    coordinate_data = vision.Shape_dectection(shape)
     hand_coordinates = coordinate_data[0]
     shape_coordinates = coordinate_data[0]
     
@@ -81,11 +82,13 @@ def get_shape(hubert, shape):
         hubert.move("elbow", 7*pi/36)
         hubert.move("body", pi)
         print("Looking for correct container...")
-        container_coordinaates = vision.get_container_coordinates(shape)
+        #container_coordinaates = vision.get_container_coordinates(shape)
+        container_coordinaates = Shape_dectection(shape) #temp, will not work, need specific get_container_coordinates function
         if container_coordinaates == [2,2]:
             find_container()
             
-        container_coordinaates = vision.get_container_coordinates(shape)
+        #container_coordinaates = vision.get_container_coordinates(shape)
+        container_coordinaates = Shape_dectection(shape) #temp, will not work, need specific get_container_coordinates function
         print("Dropping shape in container...")
         move_hand_to_position(hubert,hand_coordinates, container_coordinaates)
         hubert.move("gripper, 0")
