@@ -15,7 +15,6 @@ class servo:
         self.minAngle = minAngle
         self.maxAngle = maxAngle
         self.currentAngle
-        #self.move(0)
 
     def info(self):
         print("servo_id:", self.servo_id, "\nMin Angle: ", self.minAngle, "\nMax Angle: ", self.maxAngle, "\nMin Position:", self.minPosition, "\nMax Position: ", self.maxPosition, "\nCurrent Angle: ", self.currentAngle)
