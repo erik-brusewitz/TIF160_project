@@ -1,6 +1,6 @@
 from math import *
 import time
-import serialCommunication as sc
+import Robot_Control.serialCommunication as sc
 
 # class that is used to control the servo motor of the robot,
 # it has different function:
@@ -14,10 +14,10 @@ class servo:
         self.range = abs(maxAngle - minAngle)
         self.minAngle = minAngle
         self.maxAngle = maxAngle
-        #self.move(0)
+        self.currentAngle = minAngle #default is set to minAngle, should probably be something else?
 
     def info(self):
-        print("servo_id:", self.servo_id, "minAngle: ", self.minAngle, "maxAngle: ", self.maxAngle, " minPosition:", self.minPosition, "maxPosition: ", self.maxPosition)
+        print("servo_id:", self.servo_id, "\nMin Angle: ", self.minAngle, "\nMax Angle: ", self.maxAngle, "\nMin Position:", self.minPosition, "\nMax Position: ", self.maxPosition, "\nCurrent Angle: ", self.currentAngle)
 
     def move(self, newAngle):
         print('Start the communication to move servo')
@@ -31,9 +31,12 @@ class servo:
         else:
             sc.send_package(str(self.servo_id) + str(self.position))
         print('End the communication to move servo')
-        self.angle = newAngle
+        self.currentAngle = newAngle
             
         return 0
+        
+    def get_angle(self):
+        return self.currentAngle
 
 # //Servos
 # //Servo body; //id 0, pin number 3, min 560, max 2330
@@ -90,3 +93,7 @@ class robot:
             r.info()
         else: 
             return 1
+            
+    def get_angle(self, motor):
+        r = self.__motorC(motor)
+        return r.get_angle()
