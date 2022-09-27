@@ -1,7 +1,8 @@
 import serial
 import time
 
-arduino = serial.Serial(port='/dev/ttyACM0', baudrate=57600, timeout=.1)
+#arduino = serial.Serial(port='/dev/ttyACM0', baudrate=57600, timeout=.1)
+arduino = serial.Serial(port='/dev/cu.usbmodem11301', baudrate=57600, timeout=.1)
 
 def check_for_return_value(value):
     for i in range(40):
