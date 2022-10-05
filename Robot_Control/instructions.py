@@ -6,13 +6,13 @@ from math import *
 def initialize_robot(serial_port):
     #rob.sc.initialize_communication()
     print("Initializing robot software")
-    
+    arduino = serial.Serial(port='COM5', baudrate=57600, timeout=.1)
     #try:
-    return_value = rob.robot(serial_port)
+    return rob.robot(arduino)
     #except:
      #   return_value = -1
     
-    return return_value
+    #return return_value
 
 def set_default_position(hubert):
     print("Setting Hubert to default position...")
