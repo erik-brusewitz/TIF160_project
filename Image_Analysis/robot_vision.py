@@ -1,4 +1,4 @@
-from Shape_detection import *
+from Image_Analysis.Shape_detection import *
 
 def Initialize_camera():
 
