@@ -1,5 +1,7 @@
 import Robot_Control.robotControl as rob
 import Image_Analysis.Shape_detection as vision
+import rpyc
+import time
 from math import *
 
 def initialize_robot():
@@ -8,6 +10,7 @@ def initialize_robot():
     return rob.robot()
 
 def set_default_position(hubert):
+    print("Setting Hubert to default position...")
     hubert.move("body", pi/2)
     hubert.move("shoulder", 4*pi/9)
     hubert.move("elbow", -3*pi/18)
@@ -44,6 +47,7 @@ def find_container(hubert, shape):
     for i in range(16):
         #container_coordinaates = vision.get_container_coordinates(shape)
         container_coordinaates = Shape_dectection(shape) #temp, will not work, need specific get_container_coordinates function
+        
         if container_coordinaates != [2,2]:
             print("Found container for " + shape)
             return True
@@ -53,7 +57,19 @@ def find_container(hubert, shape):
     
     
 def get_shape(hubert, shape):
-   
+    print("rpyc")
+    #conn = rpyc.classic.connect("localhost")
+    
+    print("1")
+    try:
+        c = rpyc.connect("localhost", 18812)
+        c.root.echo("hello")
+        print("2")
+        time.sleep(1)
+        c.root.echo("abc")
+    except:
+        print("error")
+
     set_default_position(hubert)
     
     print("Searching for " + shape + "...")
