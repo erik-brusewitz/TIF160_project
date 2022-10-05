@@ -1,6 +1,7 @@
 import Robot_Control.robotControl as rob
 import Image_Analysis.Shape_detection as vision
 import time
+import serial
 from math import *
 
 def initialize_robot(serial_port):
