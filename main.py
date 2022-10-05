@@ -29,7 +29,7 @@ def main():
     cap = vision.Initialize_camera()
     
     if (hubert == -1 or cap == -1):
-        throw(error)
+        raise Exception("Exiting program...)
     
     
     shapes = ["Quadrilateral", "Pentagon", "Hexagon"]
