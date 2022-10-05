@@ -22,7 +22,7 @@ class servo:
         print("servo_id:", self.servo_id, "\nMin Angle: ", self.minAngle, "\nMax Angle: ", self.maxAngle, "\nMin Position:", self.minPosition, "\nMax Position: ", self.maxPosition, "\nCurrent Angle: ", self.currentAngle)
 
     def move(self, newAngle):
-    
+        print("Initializing arduino with serial port " + self.serial_port)
         arduino = serial.Serial(port=self.serial_port, baudrate=57600, timeout=.1)
     
         print('Start the communication to move servo')
