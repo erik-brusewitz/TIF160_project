@@ -1,7 +1,7 @@
 #import Robot_Control.instructions as instructions
 #import Robot_Control.instructions.vision as vision
 from Robot_Control import instructions
-from instructions import vision
+from Image_Analysis import Shape_detection as vision
 import argparse
 
 def main():
