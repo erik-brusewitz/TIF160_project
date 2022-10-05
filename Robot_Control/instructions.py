@@ -7,10 +7,10 @@ def initialize_robot(serial_port):
     #rob.sc.initialize_communication()
     print("Initializing robot software")
     
-    try:
-        return_value = rob.robot(serial_port)
-    except:
-        return_value = -1
+    #try:
+    return_value = rob.robot(serial_port)
+    #except:
+     #   return_value = -1
     
     return return_value
 
