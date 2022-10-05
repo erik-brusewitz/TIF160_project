@@ -1,6 +1,5 @@
 import Robot_Control.robotControl as rob
 import Image_Analysis.Shape_detection as vision
-import rpyc
 import time
 from math import *
 
@@ -57,18 +56,6 @@ def find_container(hubert, shape):
     
     
 def get_shape(cap, hubert, shape):
-    print("rpyc")
-    #conn = rpyc.classic.connect("localhost")
-    
-    print("1")
-    try:
-        c = rpyc.connect("localhost", 18812)
-        c.root.echo("hello")
-        print("2")
-        time.sleep(1)
-        c.root.echo("abc")
-    except:
-        print("error")
 
     set_default_position(hubert)
     
