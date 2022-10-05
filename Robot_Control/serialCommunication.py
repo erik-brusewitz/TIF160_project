@@ -1,9 +1,7 @@
 import serial
 import time
 
-arduino = serial.Serial(port='/dev/ttyACM0', baudrate=57600, timeout=.1)
-
-def check_for_return_value(value):
+def check_for_return_value(arduino, value):
     for i in range(40):
         data = str(arduino.readline())
         data = data.replace("b", "")
@@ -15,19 +13,19 @@ def check_for_return_value(value):
     
     return False
 
-def send_package(data):
+def send_package(arduino, data):
     arduino.write(bytes(data, 'utf-8'))
-    if check_for_return_value(data):
+    if check_for_return_value(arduino, data):
         print("Data sent and received successfully")
         return True
     else:
         print("Data sending failed")
         return False
 
-def initialize_communication():
+def initialize_communication(arduino):
     for i in range(10):
         print("Establishing serial communication...")
-        if (send_package("99999")):
+        if (send_package(arduino, "99999")):
             print("Serial communication established")
             return True
     print("Serial communication failed")

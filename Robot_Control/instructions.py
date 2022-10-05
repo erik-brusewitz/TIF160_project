@@ -4,10 +4,10 @@ import rpyc
 import time
 from math import *
 
-def initialize_robot():
+def initialize_robot(serial_port):
     #rob.sc.initialize_communication()
     print("Initializing robot software")
-    return rob.robot()
+    return rob.robot(serial_port)
 
 def set_default_position(hubert):
     print("Setting Hubert to default position...")

@@ -7,7 +7,8 @@ import Robot_Control.serialCommunication as sc
 # - .info() to get the information about the servo 
 # - .move( angle ) move the servo to that specific angle
 class servo:
-    def __init__(self, servo_id, minPosition, maxPosition, minAngle, maxAngle):
+    def __init__(self, serial_port, servo_id, minPosition, maxPosition, minAngle, maxAngle):
+        self.serial_port = serial_port
         self.servo_id = servo_id
         self.minPosition = minPosition
         self.maxPosition = maxPosition
@@ -20,6 +21,9 @@ class servo:
         print("servo_id:", self.servo_id, "\nMin Angle: ", self.minAngle, "\nMax Angle: ", self.maxAngle, "\nMin Position:", self.minPosition, "\nMax Position: ", self.maxPosition, "\nCurrent Angle: ", self.currentAngle)
 
     def move(self, newAngle):
+    
+        arduino = serial.Serial(port=self.serial_port, baudrate=57600, timeout=.1)
+    
         print('Start the communication to move servo')
         tmp = newAngle - self.minAngle
         self.position = int(self.minPosition + (tmp / self.range) * ( self.maxPosition - self.minPosition))
@@ -27,9 +31,9 @@ class servo:
         if self.position < 550 or self.position > 2400:
             print("Error, position is too large or too low")
         if self.position < 1000:
-            sc.send_package(str(self.servo_id) + "0" + str(self.position))
+            sc.send_package(arduino, str(self.servo_id) + "0" + str(self.position))
         else:
-            sc.send_package(str(self.servo_id) + str(self.position))
+            sc.send_package(arduino, str(self.servo_id) + str(self.position))
         print('End the communication to move servo')
         self.currentAngle = newAngle
             
@@ -50,13 +54,15 @@ class servo:
 # .info( "motor name" ) give the infomation about that specif servo 
 # .move( "motor name", angle ) move that specific servo to that angle
 class robot:
-    def __init__(self):
-        self.bodyMotor = servo(0,560,2330,0,pi) #0 is left facing, pi is right facing
-        self.shoulderMotor = servo(1,750,2200,0,8*pi/9) #0 is up, 8*pi/9 (160 degrees) is down
-        self.elbowMotor = servo(2,550,1600,-5*pi/18,7*pi/36) # 1100 is 0 degrees, 550 is aboput -50 degrees, 2400 is the max value, but the servo cant handle higher than 1600 = 35 degrees.
-        self.wristMotor = servo(3,550,2400,-0.22*pi,0.78*pi) #-22pi is close to the 0 positon at 950, then it rotates counter clockwise when moving to 0.78pi.
-        self.gripperMotor = servo(4,550,2150,0,1) #0 is open, 1 is closed
-        self.headMotor = servo(5,550,2340,0,pi) #0 is left, pi is right
+    def __init__(self, serial_port):
+    
+        self.serial_port = serial_port
+        self.bodyMotor = servo(serial_port,0,560,2330,0,pi) #0 is left facing, pi is right facing
+        self.shoulderMotor = servo(serial_port,1,750,2200,0,8*pi/9) #0 is up, 8*pi/9 (160 degrees) is down
+        self.elbowMotor = servo(serial_port,2,550,1600,-5*pi/18,7*pi/36) # 1100 is 0 degrees, 550 is aboput -50 degrees, 2400 is the max value, but the servo cant handle higher than 1600 = 35 degrees.
+        self.wristMotor = servo(serial_port,3,550,2400,-0.22*pi,0.78*pi) #-22pi is close to the 0 positon at 950, then it rotates counter clockwise when moving to 0.78pi.
+        self.gripperMotor = servo(serial_port,4,550,2150,0,1) #0 is open, 1 is closed
+        self.headMotor = servo(serial_port,5,550,2340,0,pi) #0 is left, pi is right
 
     def __motorC(self, motor):
         if ( motor == 'body'):

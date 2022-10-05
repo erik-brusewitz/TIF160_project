@@ -4,15 +4,26 @@ import argparse
 
 def main():
 
-    parser = argparse.ArgumentParser(description='Process some integers.')
-    parser.add_argument('integers', metavar='N', type=int, nargs='+', help='an integer for the accumulator')
-    parser.add_argument('--sum', dest='accumulate', action='store_const', const=sum, default=max, help='sum the integers (default: find the max)')
+    parser = argparse.ArgumentParser(description="Parsing command line arguments...")
+    #parser.add_argument('integers', metavar='N', type=int, nargs='+', help='an integer for the accumulator')
+    #parser.add_argument('--sum', dest='accumulate', action='store_const', const=sum, default=max, help='sum the integers (default: find the max)')
+    
+    parser.add_argument("-port", help="The arduino communications port")
 
+    
     args = parser.parse_args()
-    print(args.accumulate(args.integers))
+    
+    if args.port:
+        print("Port is set to " + args.port)
+        serial_port = args.port
+    else:
+        print("Port not set, setting to 0")
+        serial_port = "0"
+        
+    #print(args.accumulate(args.integers))
     
     
-    hubert = instructions.initialize_robot()
+    hubert = instructions.initialize_robot(serial_port)
     cap = vision.Initialize_camera()
     shapes = ["Quadrilateral", "Pentagon", "Hexagon"]
     for shape in shapes:
