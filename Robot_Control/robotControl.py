@@ -1,5 +1,6 @@
 from math import *
 import time
+import serial
 import Robot_Control.serialCommunication as sc
 
 # class that is used to control the servo motor of the robot,
