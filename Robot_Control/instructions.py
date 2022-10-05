@@ -6,7 +6,8 @@ from math import *
 
 def initialize_robot(serial_port):
     #rob.sc.initialize_communication()
-    print("Initializing robot software")
+    print("Initializing robot software...")
+    print("Initializing arduino with serial port " + self.serial_port)
     arduino = serial.Serial(port='COM5', baudrate=57600, timeout=.1)
     #try:
     return rob.robot(arduino)
