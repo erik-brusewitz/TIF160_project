@@ -102,7 +102,7 @@ def get_shape(cap, hubert, shape):
         container_coordinaates = vision.get_container_coordinates(cap, shape)
         print("Dropping shape in container...")
         move_hand_to_position(hubert,hand_coordinates, container_coordinaates)
-        hubert.move("gripper, 0")
+        hubert.move("gripper", 0)
         
         print("#################")
         print(shape + " was put into the correct container, moving on to the next shape")
