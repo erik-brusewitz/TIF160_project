@@ -1,5 +1,6 @@
-import Robot_Control.instructions as instructions
-import Robot_Control.instructions.vision as vision
+#import Robot_Control.instructions as instructions
+#import Robot_Control.instructions.vision as vision
+from Robot_Control import instructions
 import argparse
 
 def main():
