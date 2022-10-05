@@ -28,7 +28,7 @@ def main():
     hubert = instructions.initialize_robot(serial_port)
     cap = vision.Initialize_camera()
     
-    if (hubert == -1 || cap == -1):
+    if (hubert == -1 or cap == -1):
         throw(error)
     
     
