@@ -1,16 +1,32 @@
 from Shape_detection import *
-import time
 
-cap = cv2.VideoCapture(1,cv2.CAP_DSHOW) #cv2.CAP_DSHOW is used to reduce the time taken to open the ext. camera
+def Initialize_camera():
 
-while True:
-    coord_matrix = Shape_dectection(cap,'Hexagon')
+    cap = cv2.VideoCapture(1,cv2.CAP_DSHOW) #cv2.CAP_DSHOW is used to reduce the time taken to open the ext. camera
+    if not cap.isOpened():
+        print("Cannot open camera")
+        return -1
+    return cap
+    
+def get_shape_coordinates(cap, shape):
+        
+    coord_matrix = Shape_dectection(cap, shape)
     if (coord_matrix == -1):
         print("Exiting ...")
         cap.release()
         cv2.destroyAllWindows()
+        return -1
     
-    #return coord_matrix
+    return coord_matrix
     
-
-    time.sleep(0.7)
+#at the moment, this is the same as the get_shape_coordinates. Should probably be changed a bit so the robot can differentiate shapes from containers.
+def get_container_coordinates(cap, shape):
+        
+    coord_matrix = Shape_dectection(cap, shape)
+    if (coord_matrix == -1):
+        print("Exiting ...")
+        cap.release()
+        cv2.destroyAllWindows()
+        return -1
+    
+    return coord_matrix

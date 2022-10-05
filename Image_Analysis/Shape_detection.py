@@ -1,16 +1,14 @@
 from typing import final
 import numpy as np
 import cv2, math
-#from Image_Analysis.color_detection import *
-from color_detection import * #for ash's local computer
+from Image_Analysis.color_detection import *
+#from color_detection import * #for ash's local computer
 
 def Shape_dectection(cap,shape):
     
-    #cap = cv2.VideoCapture(1,cv2.CAP_DSHOW) #cv2.CAP_DSHOW is used to reduce the time taken to open the ext. camera
     if not cap.isOpened():
         print("Cannot open camera")
         return -1
-        
 
     
     ret, frame = cap.read()
