@@ -4,7 +4,7 @@ import time
 cap = cv2.VideoCapture(1,cv2.CAP_DSHOW) #cv2.CAP_DSHOW is used to reduce the time taken to open the ext. camera
 
 while True:
-    coord_matrix = Shape_dectection(frame,'Hexagon')
+    coord_matrix = Shape_dectection(cap,'Hexagon')
     if (coord_matrix == -1):
         print("Exiting ...")
         cap.release()
