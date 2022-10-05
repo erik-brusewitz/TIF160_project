@@ -23,7 +23,7 @@ class servo:
 
     def move(self, newAngle):
         print("Initializing arduino with serial port " + self.serial_port)
-        arduino = serial.Serial(port=self.serial_port, baudrate=57600, timeout=.1)
+        arduino = serial.Serial(port='COM5', baudrate=57600, timeout=.1)
     
         print('Start the communication to move servo')
         tmp = newAngle - self.minAngle
