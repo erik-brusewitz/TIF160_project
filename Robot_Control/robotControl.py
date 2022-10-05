@@ -58,7 +58,7 @@ class robot:
         self.serial_port = serial_port
         print("Initializing arduino with serial port " + self.serial_port)
         self.arduino = serial.Serial(port='COM5', baudrate=57600, timeout=.1)
-        
+        print("Initializing servos...")
         self.bodyMotor = servo(self.arduino,0,560,2330,0,pi) #0 is left facing, pi is right facing
         self.shoulderMotor = servo(self.arduino,1,750,2200,0,8*pi/9) #0 is up, 8*pi/9 (160 degrees) is down
         self.elbowMotor = servo(self.arduino,2,550,1600,-5*pi/18,7*pi/36) # 1100 is 0 degrees, 550 is aboput -50 degrees, 2400 is the max value, but the servo cant handle higher than 1600 = 35 degrees.
