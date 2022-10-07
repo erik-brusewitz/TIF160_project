@@ -95,9 +95,14 @@ def color_detection(imageFrame):
 
 	dist_red_green = []
 	for c in range(len(red_color_matrix)):
-		dist_red_green.append(math.sqrt((green_color_array[0] - red_color_matrix[c][0])**2+(green_color_array[1] - red_color_matrix[c][1])**2))
+    		
+		if len(green_color_array)==0 or len(red_color_matrix) == 0:
+			dist_red_green.append(3)
+		else:
+			dist_red_green.append(math.sqrt((green_color_array[0] - red_color_matrix[c][0])**2+(green_color_array[1] - red_color_matrix[c][1])**2))
 
 	closest_red = dist_red_green.index(np.min(dist_red_green))
+	print('closest red: ', np.min(dist_red_green))
 	# print("red matrix is: ", red_color_matrix)
 	# print("cloests red: ", closest_red)
 	# print("list: ", dist_red_green)

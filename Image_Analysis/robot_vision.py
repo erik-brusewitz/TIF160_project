@@ -8,7 +8,7 @@ while True:
     cv2.imshow('shapes', frame)
     if cv2.waitKey(1) == ord('q'):
         break
-    time.sleep(0.7)
+   
 cap.release()
 cv2.destroyAllWindows()
     
