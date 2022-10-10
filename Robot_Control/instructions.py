@@ -4,17 +4,22 @@ import time
 import serial
 from math import *
 
-def initialize_robot(serial_port):
-    #rob.sc.initialize_communication()
-    print("Initializing robot software...")
+def initialize_robot(serial_port, verbose, debug):
+
+    if verbose:
+        print("Initializing robot software...")
     print("Initializing arduino with serial port " + serial_port)
-    arduino = serial.Serial(port=serial_port, baudrate=57600, timeout=.1)
-    #try:
-    return rob.robot(arduino)
-    #except:
-     #   return_value = -1
+    try:
+        arduino = serial.Serial(port=serial_port, baudrate=57600, timeout=.1)
+    except:
+        print("Failed to reach arduino with serial port " + serial_port + ", check for spelling errors and try reconnecting the arduino USB-cable.")
+        print("Exiting program...")
+        exit()
+
+    rob.sc.initialize_communication(arduino, verbose, debug)
+    return rob.robot(arduino, verbose, debug)
+
     
-    #return return_value
 
 def set_default_position(hubert):
     print("Setting Hubert to default position...")
@@ -65,7 +70,7 @@ def find_container(hubert, shape):
     
 def get_shape(cap, hubert, shape):
 
-    set_default_position(hubert)
+    #set_default_position(hubert)
     
     print("Searching for " + shape + "...")
     coordinate_data = vision.get_shape_coordinates(cap, shape)
