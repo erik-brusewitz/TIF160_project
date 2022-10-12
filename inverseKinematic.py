@@ -116,16 +116,6 @@ class direction(robot):
    def __init__(self,hubert):
       self.m = GEKKO()
 
-      # lower bounds
-      self.theta1.LOWER = 0
-      self.theta2.LOWER = -pi
-      self.theta3.LOWER = -pi/2
-
-      # upper bounds
-      self.theta1.UPPER = pi
-      self.theta2.UPPER = 0
-      self.theta3.UPPER = 0
-
       self.posArm = np.zeros(3)
       self.angle = np.zeros(3)
       self.vectorDir = np.zeros(2)
@@ -136,54 +126,63 @@ class direction(robot):
       self.vectorDir[0] = self.camera_posShape[0] - self.camera_posArm[0] 
       self.vectorDir[1] = self.camera_posShape[1] - self.camera_posArm[1]
       # the vector has to be rotated in the absolute reference frame because now is expressed in the camera reference frame 
-      head_angle = self.hubert.angle('head')
-      body_angle = self.hubert.angle('body')
+      head_angle = self.hubert.get_angle('head')
+      body_angle = self.hubert.get_angle('body')
       theta = head_angle + body_angle
       c, s = np.cos(theta), np.sin(theta)
       R = np.array(((c, -s), (s, c)))
-      vectorDir = R.dot(vectorDir)
+      self.vectorDir = R.dot(self.vectorDir)
       # normalization of the vector and step of 2 cm
-      vectorDir = vectorDir/np.linalg.norm(vectorDir) * 0.02
+      # vectorDir = vectorDir/np.linalg.norm(vectorDir) * 0.02
       
    def __function(self):#,z):
       sm = self.m
 
-      
+      theta__1 = sm.Var(value=self.angle[0] )      
+      theta__2 = sm.Var(value=self.angle[1] )      
+      theta__3 = sm.Var(value=self.angle[2] ) 
 
-      theta1 = sm.Var(value=self.angle[0] )      
-      theta2 = sm.Var(value=self.angle[1] )      
-      theta3 = sm.Var(value=self.angle[2] ) 
+      # lower bounds
+      theta__1.LOWER = 0
+      theta__2.LOWER = 0
+      theta__3.LOWER = 0
 
+      # upper bounds
+      theta__1.UPPER = pi
+      theta__2.UPPER = pi
+      theta__3.UPPER = pi/2
 
       x = (self.posArm[0] + self.vectorDir[0])
       y = (self.posArm[1] + self.vectorDir[1])
       z = (self.posArm[2])
       
+      
        # equation 
       sm.Equations([
-         ((-0.204*sm.sin(theta3) + 0.015)*sm.cos(theta2) + (-0.204*sm.cos(theta3) - 0.088)*sm.sin(theta2) + 0.034)*sm.cos(theta1) + 0.103*sm.sin(theta1) - x==0, 
-         ((-0.204*sm.sin(theta3) + 0.015)*sm.cos(theta2) + (-0.204*sm.cos(theta3) - 0.088)*sm.sin(theta2) + 0.034)*sm.sin(theta1) - 0.103*sm.cos(theta1) - y==0,
-         (-0.204*sm.cos(theta3) - 0.088)*sm.cos(theta2) + (0.204*sm.sin(theta3) - 0.015)*sm.sin(theta2) + 0.360 - z==0
+         ((0.204*sm.sin(theta__3) + 0.015)*sm.cos(theta__2) + (0.204*sm.cos(theta__3) + 0.088)*sm.sin(theta__2) + 0.034)*sm.cos(theta__1) + 0.103*sm.sin(theta__1) - x==0, 
+         ((0.204*sm.sin(theta__3) + 0.015)*sm.cos(theta__2) + (0.204*sm.cos(theta__3) + 0.088)*sm.sin(theta__2) + 0.034)*sm.sin(theta__1) - 0.103*sm.cos(theta__1) - y==0,
+         (-0.204*sm.cos(theta__3) - 0.088)*sm.cos(theta__2) + (0.204*sm.sin(theta__3) + 0.015)*sm.sin(theta__2) + 0.360 - z==0
          ]) 
 
       # m.options.MAX_ITER = 20
       # m.options.OTOL = 1.0e-3
       sm.solve(disp=False)     # solve
-      print([theta1.value[0],theta2.value[0],theta3.value[0]]) # print solution  
+      print([theta__1.value[0],theta__2.value[0],theta__3.value[0]]) # print solution  
+      return  [theta__1.value[0],theta__2.value[0],theta__3.value[0]]
 
-   def __kinematic(self,body):
-      body = self.hubert.angle('body')
-      shoulder = self.hubert.sholder('shoulder')
-      elbow = self.hubert.elbow('elbow')
+   def __kinematic(self):
+      theta__1 = self.hubert.get_angle('body')
+      theta__2 = self.hubert.get_angle('shoulder')
+      theta__3 = self.hubert.get_angle('elbow')
+
+      self.posArm[0] = ((0.204*sin(theta__3) + 0.015)*cos(theta__2) + (0.204*cos(theta__3) + 0.088)*sin(theta__2) + 0.034)*cos(theta__1) + 0.103*sin(theta__1)
+      self.posArm[1] = ((0.204*sin(theta__3) + 0.015)*cos(theta__2) + (0.204*cos(theta__3) + 0.088)*sin(theta__2) + 0.034)*sin(theta__1) - 0.103*cos(theta__1)
+      self.posArm[2] = (-0.204*cos(theta__3) - 0.088)*cos(theta__2) + (0.204*sin(theta__3) + 0.015)*sin(theta__2) + 0.360
 
 
-      self.posArm[0] = ((-0.204*sin(elbow) + 0.015)*cos(shoulder) + (-0.204*cos(elbow) - 0.088)*sin(shoulder) + 0.034)*cos(body) + 0.103*sin(body) - (self.posArm[0] + self.delta * self.vectorDir[0])
-      self.posArm[1] = ((-0.204*sin(elbow) + 0.015)*cos(shoulder) + (-0.204*cos(elbow) - 0.088)*sin(shoulder) + 0.034)*sin(body) - 0.103*cos(body) - (self.posArm[1] + self.delta * self.vectorDir[1])
-      self.posArm[2] = (-0.204*cos(elbow) - 0.088)*cos(shoulder)+ (0.204*sin(elbow) - 0.015)*sin(shoulder) + 0.360 - (self.posArm[2] + self.delta * self.vectorDir[2])
-
-      self.angle[0] = body 
-      self.angle[1] = shoulder 
-      self.angle[2] = elbow 
+      self.angle[0] = theta__1 
+      self.angle[1] = theta__2 
+      self.angle[2] = theta__3 
 
    def motion(self, arm, shape):
       self.camera_posArm = arm 

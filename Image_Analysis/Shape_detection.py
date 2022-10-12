@@ -31,6 +31,7 @@ def Shape_dectection(cap,shape,verbose,debug):
     (arm_coord,closest_red)=color_detection(frame)
     coord_matrix[0] = arm_coord
     coord_matrix[2] = closest_red
+    distance_bw_rd_green = math.sqrt((arm_coord[0] - closest_red[0])**2+(arm_coord[1] - closest_red[1])**2)
     # print(arm_coord)
     # list for storing names of shapes
     for contour in contours:
@@ -97,9 +98,11 @@ def Shape_dectection(cap,shape,verbose,debug):
     #final_cords = arm + destination_matrix [1x2]
     final_cords = [[], []]
     final_cords[0] = arm_coord 
-    if coord_matrix[1] ==[]:
+    if coord_matrix[1] ==[] and distance_bw_rd_green <=0.2:
         final_cords[1] = coord_matrix[2]
-    else:
+    elif coord_matrix[1] ==[] and distance_bw_rd_green >=0.4:
+        final_cords[1] = [2,2]  
+    else:  #as long as the shape is visible
         final_cords[1] = coord_matrix[1]
 
     #cv2.imshow('shapes', frame)
