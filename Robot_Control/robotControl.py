@@ -1,7 +1,7 @@
 from math import *
 import time
 import serial
-import Robot_Control.serialCommunication as sc
+from Robot_Control import serialCommunication as sc
 
 # class that is used to control the servo motor of the robot,
 # it has different function:
@@ -16,8 +16,8 @@ class servo:
         self.minPosition = minPosition
         self.maxPosition = maxPosition
         self.range = abs(maxAngle - minAngle)
-        self.minAngle = maxAngle
-        self.maxAngle = minAngle
+        self.minAngle = minAngle
+        self.maxAngle = maxAngle
         self.currentAngle = minAngle #default is set to minAngle, should probably be something else?
         self.flip_angle_direction = flip_angle_direction
 
@@ -25,23 +25,24 @@ class servo:
         print("servo_id:", self.servo_id, "\nMin Angle: ", self.minAngle, "\nMax Angle: ", self.maxAngle, "\nMin Position:", self.minPosition, "\nMax Position: ", self.maxPosition, "\nCurrent Angle: ", self.currentAngle)
 
     def move(self, newAngle):
-        if self.verbose:
-            print('Start the communication to move servo')
+        if self.debug: self.info()
         tmp = newAngle - self.minAngle
-        
         if self.flip_angle_direction:
-            self.position = int(self.maxPosition + (tmp / self.range) * ( self.maxPosition - self.minPosition))
+            if self.debug: print("True :)")
+            self.position = int(self.maxPosition - (tmp / self.range) * ( self.maxPosition - self.minPosition))
         else:
+            if self.debug: print("False :(")
             self.position = int(self.minPosition + (tmp / self.range) * ( self.maxPosition - self.minPosition))
             
         position_string = str(self.position)
-        if self.position < 550 or self.position > 2400:
-            print("Error, position is too large or too low")
+        if self.position < self.minPosition or self.position > self.maxPosition:
+            print("Error, position = " + str(self.position) + ", expected value between " + str(self.minPosition) + " and " + str(self.maxPosition))
+            return 0
         if self.position < 1000:
             sc.send_package(self.arduino, str(self.servo_id) + "0" + str(self.position), self.verbose, self.debug)
         else:
             sc.send_package(self.arduino, str(self.servo_id) + str(self.position), self.verbose, self.debug)
-        if self.verbose:
+        if self.debug:
             print('End the communication to move servo')
         self.currentAngle = newAngle
             
@@ -70,12 +71,12 @@ class robot:
         #self.arduino = serial.Serial(port='COM5', baudrate=57600, timeout=.1)
         if verbose:
             print("Initializing servos...")
-        self.bodyMotor = servo(self.arduino,self.verbose,self.debug,0,560,2330,0,pi,0) #0 is left facing, pi is right facing
+        self.bodyMotor = servo(self.arduino,self.verbose,self.debug,0,560,2330,0,pi,1) #0 is left facing, pi is right facing
         self.shoulderMotor = servo(self.arduino,self.verbose,self.debug,1,750,2200,0,160*pi/180,1) #0 is down, 8*pi/9 (160 degrees) is up
         self.elbowMotor = servo(self.arduino,self.verbose, self.debug,2,550,1600,-50*pi/180,35*pi/180,0) # -50 degrees i backwards, +35 degrees is forwards. (1100 is 0 degrees, 2400 is the max value, but the servo cant handle higher than 1600 = 35 degrees.)
         self.wristMotor = servo(self.arduino,self.verbose, self.debug,3,550,2400,-39.6*pi/180,140.4*pi/180,0) #-22pi is close to the 0 positon at 950, then it rotates counter clockwise when moving to 0.78pi.
         self.gripperMotor = servo(self.arduino,self.verbose, self.debug,4,550,2150,0,1,0) #0 is open, 1 is closed
-        self.headMotor = servo(self.arduino,self.verbose, self.debug,5,550,2340,0,pi,0) #0 is left, pi is right
+        self.headMotor = servo(self.arduino,self.verbose, self.debug,5,550,2340,0,pi,1) #0 is left, pi is right
 
     def __motorC(self, motor):
         if ( motor == 'body'):

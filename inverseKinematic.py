@@ -5,9 +5,10 @@ from Robot_Control.robotControl import robot
 
 class direction(robot):
    
-   def __init__(self,hubert, verbose, debug):
+   def __init__(self, hubert, step, vector_length, verbose, debug):
       self.m = GEKKO()
-      self.step = 0.02
+      self.step = step
+      self.vector_length = vector_length #not in use atm
       self.verbose = verbose
       self.debug = debug
 
@@ -21,16 +22,16 @@ class direction(robot):
       self.vectorDir[0] = self.camera_posShape[0] - self.camera_posArm[0] 
       self.vectorDir[1] = self.camera_posShape[1] - self.camera_posArm[1]
       # the vector has to be rotated in the absolute reference frame because now is expressed in the camera reference frame 
-      head_angle = self.hubert.get_angle('head')
-      body_angle = self.hubert.get_angle('body')
-      theta = body_angle # + head angle in case we move it 
-      c, s = np.cos(theta), np.sin(theta)
-      R = np.array(((c, -s), (s, c)))
-      self.vectorDir = R.dot(self.vectorDir)
+      # head_angle = self.hubert.get_angle('head')
+      # body_angle = self.hubert.get_angle('body')
+      # theta = body_angle # + head angle in case we move it 
+      # c, s = np.cos(theta), np.sin(theta)
+      # R = np.array(((c, -s), (s, c)))
+      # self.vectorDir = R.dot(self.vectorDir)
       # normalization of the vector and step of 2 cm
       self.vectorDir = self.vectorDir/np.linalg.norm(self.vectorDir) * self.step
       
-      if self.verbose:
+      if self.debug:
          print("Directional vector = (" + str(self.vectorDir[0]) + ", " + str(self.vectorDir[1]) + ")")
 
    def __function(self):#,z):
@@ -43,12 +44,12 @@ class direction(robot):
       # lower bounds
       theta__1.LOWER = 0
       theta__2.LOWER = 0
-      theta__3.LOWER = 0
+      theta__3.LOWER = -50*pi/180
 
       # upper bounds
       theta__1.UPPER = pi
       theta__2.UPPER = pi
-      theta__3.UPPER = pi/2
+      theta__3.UPPER = 35*pi/180
 
       x = (self.posArm[0] + self.vectorDir[0])
       y = (self.posArm[1] + self.vectorDir[1])
@@ -64,7 +65,11 @@ class direction(robot):
 
       # m.options.MAX_ITER = 20
       # m.options.OTOL = 1.0e-3
-      sm.solve(disp=False)     # solve
+      try:
+         sm.solve(disp=False)
+      except:
+         return -1
+         # solve
       # print([theta__1.value[0],theta__2.value[0],theta__3.value[0]]) # print solution
       self.hubert.move('body',theta__1.value[0])
       self.hubert.move('shoulder',theta__2.value[0])
@@ -75,7 +80,7 @@ class direction(robot):
       theta__2 = self.hubert.get_angle('shoulder')
       theta__3 = self.hubert.get_angle('elbow')
       
-      if self.verbose:
+      if self.debug:
         print("Printing body angles...")
         print("Body angle: " + str(theta__1) + "\nShoulder angle: " + str(theta__2) + "\nElbow angle: " + str(theta__3))
 
@@ -92,6 +97,8 @@ class direction(robot):
    def motion(self, arm, shape):
       self.camera_posArm = arm 
       self.camera_posShape = shape
+      self.camera_posArm[1] = 1 - self.camera_posArm[1]
+      self.camera_posShape[1] = 1 - self.camera_posShape[1]
       #self.angle = angle # in the final code will be taken from the robot class
       
       # direction vector to the shape
@@ -101,7 +108,8 @@ class direction(robot):
       self.__kinematic()
 
       # calculate numerically the new position of the arm
-      self.__function()
+      if self.__function() == -1:
+         return -1
 
 
 

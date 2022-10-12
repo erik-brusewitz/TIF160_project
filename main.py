@@ -3,6 +3,17 @@
 from Robot_Control import instructions
 from Image_Analysis import robot_vision as vision
 import argparse
+import time
+import cv2
+
+def camera_test(cap):
+    while True:
+        ret, frame = cap.read()
+        cv2.imshow('shapes', frame)
+        if cv2.waitKey(1) == ord('q'):
+            print("Camera exited manually")
+            return -1
+        time.sleep(0.01)
 
 def main():
     print("Starting program...")
@@ -28,8 +39,11 @@ def main():
         serial_port = args.port
         print("Serial port is set to " + serial_port)   
     else:
-        print("Port not set, defaulting to COM5")
-        serial_port = "COM5"
+        print("Port not set, defaulting to /dev/ttyACM0")
+        serial_port = "/dev/ttyACM0"
+        print("Also setting verbose and debug to true")
+        verbose = True
+        debug = False
         
 
     hubert = instructions.initialize_robot(serial_port, verbose, debug)
@@ -39,8 +53,9 @@ def main():
     cap = vision.Initialize_camera(verbose, debug) 
     if verbose:
         print("Camera initialization successful")
-        
-    instructions.set_default_position()
+    #camera_test(cap)
+
+    instructions.set_default_position(hubert)
     
     shapes = ["Quadrilateral", "Pentagon", "Hexagon"]
     print("Searching for the shapes...")

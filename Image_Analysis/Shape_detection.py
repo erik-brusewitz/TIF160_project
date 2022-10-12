@@ -14,11 +14,12 @@ def Shape_dectection(cap,shape,pick_up,verbose,debug):
     
     ret, frame = cap.read()
     
-    cv2.imwrite("preview.jpg", frame)
+    #cv2.imwrite("preview.jpg", frame)
+    
     # if frame is read correctly ret is True
     if not ret:
         print("Can't receive frame (stream end?)")
-        Camera_failure(cap)
+        return -1
 
     cv2.imshow('shapes', frame)
     
