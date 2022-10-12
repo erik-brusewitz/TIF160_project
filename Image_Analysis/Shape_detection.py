@@ -4,8 +4,9 @@ import cv2, math
 from Image_Analysis.color_detection import *
 #from color_detection import * #for ash's local computer
 
-def Shape_dectection(cap,shape,verbose,debug):
-    
+def Shape_dectection(cap,shape,pick_up,verbose,debug):
+    #If pick_up is 1, then the camera should find a shape to pick up
+    #If pick_up is 0, the camera should find the container coordinates (centre)
     if not cap.isOpened():
         print("Cannot open camera")
         return -1

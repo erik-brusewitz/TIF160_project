@@ -40,8 +40,8 @@ def Initialize_camera(verbose, debug):
     return cap
     
 def get_shape_coordinates(cap, shape, verbose, debug):
-        
-    coord_matrix = Shape_dectection(cap, shape, verbose, debug)
+    pick_up = 1
+    coord_matrix = Shape_dectection(cap, shape, pick_up, verbose, debug)
     # if (coord_matrix == [9999,9999]):
         # print("Failed to get shape coordinates")
         # print("Exiting program")
@@ -52,9 +52,9 @@ def get_shape_coordinates(cap, shape, verbose, debug):
     return coord_matrix
     
 #at the moment, this is the same as the get_shape_coordinates. Should probably be changed a bit so the robot can differentiate shapes from containers.
-def get_container_coordinates(cap, shape, verbose, debu):
-        
-    coord_matrix = Shape_dectection(cap, shape, verbose, debug)
+def get_container_coordinates(cap, shape, verbose, debug):
+    pick_up = 0
+    coord_matrix = Shape_dectection(cap, shape, pick_up, verbose, debug)
     # if (coord_matrix == [9999,9999]):
         # print("Failed to get container coordinates")
         # print("Exiting program")
