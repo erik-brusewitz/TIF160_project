@@ -39,7 +39,7 @@ def Initialize_camera(verbose, debug):
         
     return cap
     
-def get_shape_coordinates(cap, shape):
+def get_shape_coordinates(cap, shape, verbose, debug):
         
     coord_matrix = Shape_dectection(cap, shape, verbose, debug)
     # if (coord_matrix == [9999,9999]):
@@ -52,7 +52,7 @@ def get_shape_coordinates(cap, shape):
     return coord_matrix
     
 #at the moment, this is the same as the get_shape_coordinates. Should probably be changed a bit so the robot can differentiate shapes from containers.
-def get_container_coordinates(cap, shape):
+def get_container_coordinates(cap, shape, verbose, debu):
         
     coord_matrix = Shape_dectection(cap, shape, verbose, debug)
     # if (coord_matrix == [9999,9999]):

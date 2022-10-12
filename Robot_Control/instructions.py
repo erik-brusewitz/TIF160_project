@@ -76,13 +76,13 @@ def get_shape(cap, hubert, shape):
     #set_default_position(hubert)
     
     print("Searching for " + shape + "...")
-    coordinate_data = vision.get_shape_coordinates(cap, shape)
+    coordinate_data = vision.get_shape_coordinates(cap, shape, verbose, debug)
     hand_coordinates = coordinate_data[0]
     shape_coordinates = coordinate_data[1]
     
     if shape_coordinates == [2,2]:
         find_shape(shape)
-        coordinate_data = vision.get_shape_coordinates(cap, shape)
+        coordinate_data = vision.get_shape_coordinates(cap, shape, verbose, debug)
         hand_coordinates = coordinate_data[0]
         shape_coordinates = coordinate_data[1]
         
@@ -101,12 +101,12 @@ def get_shape(cap, hubert, shape):
         hubert.move("body", pi)
         print("Looking for correct container...")
         #container_coordinaates = vision.get_container_coordinates(shape)
-        container_coordinaates = vision.get_container_coordinates(cap, shape)
+        container_coordinaates = vision.get_container_coordinates(cap, shape, verbose, debug)
         if container_coordinaates == [2,2]:
             find_container()
             
         #container_coordinaates = vision.get_container_coordinates(shape)
-        container_coordinaates = vision.get_container_coordinates(cap, shape)
+        container_coordinaates = vision.get_container_coordinates(cap, shape, verbose, debug)
         print("Dropping shape in container...")
         move_hand_to_position(hubert,hand_coordinates, container_coordinaates)
         hubert.move("gripper", 0)
