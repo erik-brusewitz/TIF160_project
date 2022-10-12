@@ -20,7 +20,7 @@ class direction(robot):
       # the vector has to be rotated in the absolute reference frame because now is expressed in the camera reference frame 
       head_angle = self.hubert.get_angle('head')
       body_angle = self.hubert.get_angle('body')
-      theta = head_angle + body_angle
+      theta = body_angle # + head angle in case we move it 
       c, s = np.cos(theta), np.sin(theta)
       R = np.array(((c, -s), (s, c)))
       self.vectorDir = R.dot(self.vectorDir)

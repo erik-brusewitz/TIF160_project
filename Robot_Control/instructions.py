@@ -33,14 +33,14 @@ def set_default_position(hubert):
 
 def find_shape(hubert, shape):
     print("Searching for " + shape + "...")
-    hubert.move("body", pi/2)
-    hubert.move("head", pi/4)
-    for i in range(16):
+    hubert.move("body", 0)
+    #hubert.move("head", pi/4)
+    for i in range(17):
         coordinate_data = vision.Shape_dectection(shape)
         if coordinate_data[0] != [2,2]:
             print("Found a " + shape)
             return True
-        hubert.move("head", pi/4 + pi*i/32)
+        hubert.move("body", pi*i/32) # we can use head 
     print(shape + " not found")
     find_shape(shape)
     
