@@ -3,6 +3,7 @@ import Image_Analysis.robot_vision as vision
 import time
 import serial
 from math import *
+from inverseKinematic import *
 
 def initialize_robot(serial_port, verbose, debug):
 
@@ -50,7 +51,9 @@ def find_hand(hubert):
     
 def move_hand_to_position(hubert, hand_pos, target_pos):
     
-    #put inverse kinematic equations here...
+    dirc = direction(hubert)
+
+    dirc.motion(hand_pos,target_pos)
     return True
     
 def find_container(hubert, shape):
@@ -75,21 +78,21 @@ def get_shape(cap, hubert, shape):
     print("Searching for " + shape + "...")
     coordinate_data = vision.get_shape_coordinates(cap, shape)
     hand_coordinates = coordinate_data[0]
-    shape_coordinates = coordinate_data[0]
+    shape_coordinates = coordinate_data[1]
     
     if shape_coordinates == [2,2]:
         find_shape(shape)
         
     coordinate_data = vision.get_shape_coordinates(cap, shape)
     hand_coordinates = coordinate_data[0]
-    shape_coordinates = coordinate_data[0]
+    shape_coordinates = coordinate_data[1]
         
     if hand_coordinates == [2,2]:
         find_hand() #todo
         
     coordinate_data = vision.get_shape_coordinates(cap, shape)
     hand_coordinates = coordinate_data[0]
-    shape_coordinates = coordinate_data[0]
+    shape_coordinates = coordinate_data[1]
     
     if move_hand_to_position(hubert, hand_coordinates, shape_coordinates): #todo
         print("Gripping shape...")
