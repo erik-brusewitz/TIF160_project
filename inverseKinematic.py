@@ -28,7 +28,7 @@ class direction(robot):
       R = np.array(((c, -s), (s, c)))
       self.vectorDir = R.dot(self.vectorDir)
       # normalization of the vector and step of 2 cm
-      self.vectorDir = vectorDir/np.linalg.norm(vectorDir) * self.step
+      self.vectorDir = self.vectorDir/np.linalg.norm(self.vectorDir) * self.step
       
    def __function(self):#,z):
       sm = self.m
@@ -74,7 +74,7 @@ class direction(robot):
       
       if self.verbose:
         print("Printing body angles...")
-        print("Body angle: " + theta__1 + "\nShoulder angle: " + theta__2 + "\nElbow angle: " + theta__3)
+        print("Body angle: " + str(theta__1) + "\nShoulder angle: " + str(theta__2) + "\nElbow angle: " + str(theta__3))
 
       self.posArm[0] = ((0.204*sin(theta__3) + 0.015)*cos(theta__2) + (0.204*cos(theta__3) + 0.088)*sin(theta__2) + 0.034)*cos(theta__1) + 0.103*sin(theta__1)
       self.posArm[1] = ((0.204*sin(theta__3) + 0.015)*cos(theta__2) + (0.204*cos(theta__3) + 0.088)*sin(theta__2) + 0.034)*sin(theta__1) - 0.103*cos(theta__1)

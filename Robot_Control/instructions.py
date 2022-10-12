@@ -26,7 +26,7 @@ def set_default_position(hubert):
     print("Setting Hubert to default position...")
     hubert.move("body", pi/2)
     hubert.move("shoulder", 4*pi/9)
-    hubert.move("elbow", -3*pi/18)
+    hubert.move("elbow", 10*pi/180)
     hubert.move("wrist", 0)
     hubert.move("gripper", 0)
     hubert.move("head", pi/2)
@@ -52,7 +52,7 @@ def find_hand(hubert):
 def move_hand_to_position(hubert, hand_pos, target_pos, verbose, debug):
     if verbose:
         print("Trying to move hand to position...")
-        print("Hand at position " + hand_pos + "\nTarget position: " + target_pos)
+        print("Hand at position (" + str(hand_pos[0]) + ", " + str(hand_pos[1]) + ")\nTarget position: (" + str(target_pos[0]) + ", " + str(target_pos[1]) + ")")
     dirc = direction(hubert, verbose, debug)
 
     dirc.motion(hand_pos,target_pos)

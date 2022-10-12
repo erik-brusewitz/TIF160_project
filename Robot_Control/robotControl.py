@@ -66,7 +66,7 @@ class robot:
             print("Initializing servos...")
         self.bodyMotor = servo(self.arduino,self.verbose,self.debug,0,560,2330,0,pi) #0 is left facing, pi is right facing
         self.shoulderMotor = servo(self.arduino,self.verbose,self.debug,1,750,2200,0,8*pi/9) #0 is up, 8*pi/9 (160 degrees) is down
-        self.elbowMotor = servo(self.arduino,self.verbose, self.debug,2,550,1600,-5*pi/18,7*pi/36) # 1100 is 0 degrees, 550 is aboput -50 degrees, 2400 is the max value, but the servo cant handle higher than 1600 = 35 degrees.
+        self.elbowMotor = servo(self.arduino,self.verbose, self.debug,2,550,1600,-50*pi/180,35*pi/180) # 1100 is 0 degrees, 550 is about -50 degrees, 2400 is the max value, but the servo cant handle higher than 1600 = 35 degrees.
         self.wristMotor = servo(self.arduino,self.verbose, self.debug,3,550,2400,-0.22*pi,0.78*pi) #-22pi is close to the 0 positon at 950, then it rotates counter clockwise when moving to 0.78pi.
         self.gripperMotor = servo(self.arduino,self.verbose, self.debug,4,550,2150,0,1) #0 is open, 1 is closed
         self.headMotor = servo(self.arduino,self.verbose, self.debug,5,550,2340,0,pi) #0 is left, pi is right
