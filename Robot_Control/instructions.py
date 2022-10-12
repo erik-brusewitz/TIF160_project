@@ -71,7 +71,7 @@ def find_container(hubert, shape):
     find_container(shape)
     
     
-def get_shape(cap, hubert, shape):
+def get_shape(cap, hubert, shape, verbose, debug):
 
     #set_default_position(hubert)
     
