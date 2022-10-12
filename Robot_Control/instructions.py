@@ -49,9 +49,11 @@ def find_hand(hubert):
     a = hubert.get_angle("body")
     b = hubert.get_angle("head")
     
-def move_hand_to_position(hubert, hand_pos, target_pos):
-    
-    dirc = direction(hubert)
+def move_hand_to_position(hubert, hand_pos, target_pos, verbose, debug):
+    if verbose:
+        print("Trying to move hand to position...")
+        print("Hand at position " + hand_pos + "\nTarget position: " + target_pos)
+    dirc = direction(hubert, verbose, debug)
 
     dirc.motion(hand_pos,target_pos)
     return True
@@ -93,7 +95,8 @@ def get_shape(cap, hubert, shape, verbose, debug):
     # hand_coordinates = coordinate_data[0]
     # shape_coordinates = coordinate_data[1]
     
-    if move_hand_to_position(hubert, hand_coordinates, shape_coordinates): #todo
+    if move_hand_to_position(hubert, hand_coordinates, shape_coordinates, verbose, debug): #todo
+
         print("Gripping shape...")
         hubert.move("gripper", 0.9)
         hubert.move("shoulder", 0.1)

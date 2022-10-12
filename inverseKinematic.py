@@ -5,8 +5,10 @@ from Robot_Control.robotControl import robot
 
 class direction(robot):
    
-   def __init__(self,hubert):
+   def __init__(self,hubert, verbose, debug):
       self.m = GEKKO()
+      self.verbose = verbose
+      self.debug = debug
 
       self.posArm = np.zeros(3)
       self.angle = np.zeros(3)
@@ -68,6 +70,10 @@ class direction(robot):
       theta__1 = self.hubert.get_angle('body')
       theta__2 = self.hubert.get_angle('shoulder')
       theta__3 = self.hubert.get_angle('elbow')
+      
+      if self.verbose:
+        print("Printing body angles...")
+        print("Body angle: " + theta__1 + "\nShoulder angle: " + theta__2 + "\nElbow angle: " + theta__3)
 
       self.posArm[0] = ((0.204*sin(theta__3) + 0.015)*cos(theta__2) + (0.204*cos(theta__3) + 0.088)*sin(theta__2) + 0.034)*cos(theta__1) + 0.103*sin(theta__1)
       self.posArm[1] = ((0.204*sin(theta__3) + 0.015)*cos(theta__2) + (0.204*cos(theta__3) + 0.088)*sin(theta__2) + 0.034)*sin(theta__1) - 0.103*cos(theta__1)
