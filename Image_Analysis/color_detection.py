@@ -116,7 +116,7 @@ def color_detection(imageFrame):
 	# print("list: ", dist_red_green)
 
 	# Creating contour to track green color
-	if green_color_array !=None:
+	if green_color_array !=[]:
 		return(green_color_array, red_color_matrix[closest_red])
 	else:
-		return(9999, 9999)
+		return([9999,9999],[9999,9999])
