@@ -24,7 +24,7 @@ class servo:
         print("servo_id:", self.servo_id, "\nMin Angle: ", self.minAngle, "\nMax Angle: ", self.maxAngle, "\nMin Position:", self.minPosition, "\nMax Position: ", self.maxPosition, "\nCurrent Angle: ", self.currentAngle)
 
     def move(self, newAngle):
-        if verbose:
+        if self.verbose:
             print('Start the communication to move servo')
         tmp = newAngle - self.minAngle
         self.position = int(self.minPosition + (tmp / self.range) * ( self.maxPosition - self.minPosition))
@@ -35,7 +35,7 @@ class servo:
             sc.send_package(self.arduino, str(self.servo_id) + "0" + str(self.position), self.verbose, self.debug)
         else:
             sc.send_package(self.arduino, str(self.servo_id) + str(self.position), self.verbose, self.debug)
-        if verbose:
+        if self.verbose:
             print('End the communication to move servo')
         self.currentAngle = newAngle
             

@@ -4,7 +4,7 @@ import cv2, math
 from Image_Analysis.color_detection import *
 #from color_detection import * #for ash's local computer
 
-def Shape_dectection(cap,shape):
+def Shape_dectection(cap,shape,verbose,debug):
     
     if not cap.isOpened():
         print("Cannot open camera")
@@ -111,7 +111,8 @@ def Shape_dectection(cap,shape):
         print("Camera exited manually")
         return -1
         
-    print("Three dims: ", coord_matrix)
-    print("FInal FINAL: ", final_cords)
+    #print("Three dims: ", coord_matrix)
+    if verbose:
+        print("Returning object coordinates: ", final_cords)
 
     return(final_cords)
