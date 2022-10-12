@@ -1,26 +1,26 @@
 from typing import final
 import numpy as np
 import cv2, math
-#from Image_Analysis.color_detection import *
-from color_detection import * #for ash's local computer
+from Image_Analysis.color_detection import *
+#from color_detection import * #for ash's local computer
 
-def Shape_dectection(frame,shape):
+def Shape_dectection(cap,shape):
     
-    #cap = cv2.VideoCapture(1,cv2.CAP_DSHOW) #cv2.CAP_DSHOW is used to reduce the time taken to open the ext. camera
-    #if not cap.isOpened():
-     #   print("Cannot open camera")
-      #  exit()
+    if not cap.isOpened():
+        print("Cannot open camera")
+        return -1
 
-
-   # while True:
-    # Capture frame-by-frame
+    
+    ret, frame = cap.read()
     
     cv2.imwrite("preview.jpg", frame)
     # if frame is read correctly ret is True
-    #if not ret:
-     #   print("Can't receive frame (stream end?). Exiting ...")
-      #  break
+    if not ret:
+        print("Can't receive frame (stream end?)")
+        Camera_failure(cap)
 
+    cv2.imshow('shapes', frame)
+    
     imgGry = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)  
 
     thrash  = cv2.adaptiveThreshold(imgGry, 255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 15, 8)
@@ -106,10 +106,15 @@ def Shape_dectection(frame,shape):
         final_cords[1] = coord_matrix[1]
 
     #cv2.imshow('shapes', frame)
-    #if cv2.waitKey(1) == ord('q'):
-     #   break
+    
+    #if q is pressed with focus on the camera window, the program is stopped.
+    #This line is required for the camera window to work, otherwise it crashes.
+    #It does not matter what is inside the if statement, the important line is the if statement itself.
+    if cv2.waitKey(1) == ord('q'):
+        print("Camera exited manually")
+        return -1
+        
     print("Three dims: ", coord_matrix)
     print("FInal FINAL: ", final_cords)
-   # cap.release()
-    #cv2.destroyAllWindows()
+
     return(final_cords)

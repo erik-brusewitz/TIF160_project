@@ -1,17 +1,65 @@
-from Shape_detection import *
-import time
-cap = cv2.VideoCapture(1,cv2.CAP_DSHOW) #cv2.CAP_DSHOW is used to reduce the time taken to open the ext. camera
+from Image_Analysis.Shape_detection import *
 
-while True:
-    ret, frame = cap.read()
-    coord_matrix = Shape_dectection(frame,'Hexagon')
-    cv2.imshow('shapes', frame)
-    if cv2.waitKey(1) == ord('q'):
-        break
-   
-cap.release()
-cv2.destroyAllWindows()
+def Initialize_camera(verbose, debug):
+    print("Initializing camera...")
+    if verbose:
+        print("Trying capture settings: ''-1,cv2.CAP_DSHOW''")
+    cap = cv2.VideoCapture(-1,cv2.CAP_DSHOW) #cv2.CAP_DSHOW is used to reduce the time taken to open the ext. camera
+    #cap = cv2.VideoCapture(1,"/dev/video0")
+    #cap = cv2.VideoCapture(-1)
+    if not cap.isOpened():
+        if verbose:
+            print("Failed, trying capture settings: ''0,cv2.CAP_DSHOW''")
+        cap = cv2.VideoCapture(0,cv2.CAP_DSHOW)
+        
+    if not cap.isOpened():
+        if verbose:
+            print("Failed, trying capture settings: ''1,cv2.CAP_DSHOW''")
+        cap = cv2.VideoCapture(1,cv2.CAP_DSHOW)
+        
+    if not cap.isOpened():
+        if verbose:
+            print("Failed, trying capture settings: ''-1''")
+        cap = cv2.VideoCapture(-1)
+        
+    if not cap.isOpened():
+        if verbose:
+            print("Failed, trying capture settings: ''0''")
+        cap = cv2.VideoCapture(0)
+        
+    if not cap.isOpened():
+        if verbose:
+            print("Failed, trying capture settings: ''1''")
+        cap = cv2.VideoCapture(1)    
+        
+    if not cap.isOpened():    
+        print("Failed to open camera")
+        print("Exiting program...")
+        exit()
+        
+    return cap
     
-
-#nothing beyong line 4 works because it is in a loop for as long as the camera is on. 
-#this is a problem because python works in a serial manner and we need to implement functions parallely
+def get_shape_coordinates(cap, shape):
+        
+    coord_matrix = Shape_dectection(cap, shape)
+    if (coord_matrix == -1):
+        print("Failed to get shape coordinates")
+        print("Exiting program")
+        cap.release()
+        cv2.destroyAllWindows()
+        exit()
+    
+    return coord_matrix
+    
+#at the moment, this is the same as the get_shape_coordinates. Should probably be changed a bit so the robot can differentiate shapes from containers.
+def get_container_coordinates(cap, shape):
+        
+    coord_matrix = Shape_dectection(cap, shape)
+    if (coord_matrix == -1):
+        print("Failed to get container coordinates")
+        print("Exiting program")
+        cap.release()
+        cv2.destroyAllWindows()
+        exit()
+    
+    return coord_matrix
