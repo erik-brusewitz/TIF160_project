@@ -100,7 +100,7 @@ def Shape_dectection(frame,shape):
     final_cords[0] = arm_coord 
     if coord_matrix[1] ==[] and distance_bw_rd_green <=0.2:
         final_cords[1] = coord_matrix[2]
-    elif coord_matrix[1] ==[] and distance_bw_rd_green >=0.2:
+    elif coord_matrix[1] ==[] and distance_bw_rd_green >=0.4:
         final_cords[1] = [2,2]  
     else:  #as long as the shape is visible
         final_cords[1] = coord_matrix[1]
