@@ -59,8 +59,10 @@ class direction(robot):
       # m.options.MAX_ITER = 20
       # m.options.OTOL = 1.0e-3
       sm.solve(disp=False)     # solve
-      print([theta__1.value[0],theta__2.value[0],theta__3.value[0]]) # print solution  
-      return  [theta__1.value[0],theta__2.value[0],theta__3.value[0]]
+      # print([theta__1.value[0],theta__2.value[0],theta__3.value[0]]) # print solution
+      self.hubert.move('body',theta__1.value[0])
+      self.hubert.move('shoulder',theta__2.value[0])
+      self.hubert.move('elbow',theta__3.value[0])
 
    def __kinematic(self):
       theta__1 = self.hubert.get_angle('body')

@@ -82,17 +82,16 @@ def get_shape(cap, hubert, shape):
     
     if shape_coordinates == [2,2]:
         find_shape(shape)
+        coordinate_data = vision.get_shape_coordinates(cap, shape)
+        hand_coordinates = coordinate_data[0]
+        shape_coordinates = coordinate_data[1]
         
-    coordinate_data = vision.get_shape_coordinates(cap, shape)
-    hand_coordinates = coordinate_data[0]
-    shape_coordinates = coordinate_data[1]
+    # if hand_coordinates == [2,2]:
+    #     find_hand() #todo
         
-    if hand_coordinates == [2,2]:
-        find_hand() #todo
-        
-    coordinate_data = vision.get_shape_coordinates(cap, shape)
-    hand_coordinates = coordinate_data[0]
-    shape_coordinates = coordinate_data[1]
+    # coordinate_data = vision.get_shape_coordinates(cap, shape)
+    # hand_coordinates = coordinate_data[0]
+    # shape_coordinates = coordinate_data[1]
     
     if move_hand_to_position(hubert, hand_coordinates, shape_coordinates): #todo
         print("Gripping shape...")
