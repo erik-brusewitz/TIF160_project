@@ -7,6 +7,7 @@ class direction(robot):
    
    def __init__(self,hubert, verbose, debug):
       self.m = GEKKO()
+      self.step = 0.02
       self.verbose = verbose
       self.debug = debug
 
@@ -27,7 +28,7 @@ class direction(robot):
       R = np.array(((c, -s), (s, c)))
       self.vectorDir = R.dot(self.vectorDir)
       # normalization of the vector and step of 2 cm
-      # vectorDir = vectorDir/np.linalg.norm(vectorDir) * 0.02
+      self.vectorDir = vectorDir/np.linalg.norm(vectorDir) * self.step
       
    def __function(self):#,z):
       sm = self.m

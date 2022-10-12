@@ -3,10 +3,14 @@ from Image_Analysis.Shape_detection import *
 def Initialize_camera(verbose, debug):
     print("Initializing camera...")
     if verbose:
-        print("Trying capture settings: ''-1,cv2.CAP_DSHOW''")
-    cap = cv2.VideoCapture(-1,cv2.CAP_DSHOW) #cv2.CAP_DSHOW is used to reduce the time taken to open the ext. camera
-    #cap = cv2.VideoCapture(1,"/dev/video0")
-    #cap = cv2.VideoCapture(-1)
+        print("Trying capture settings: ''-1''")
+    cap = cv2.VideoCapture(-1) #cv2.CAP_DSHOW is used to reduce the time taken to open the ext. camera
+
+    if not cap.isOpened():
+        if verbose:
+            print("Failed, trying capture settings: ''-1,cv2.CAP_DSHOW''")
+        cap = cv2.VideoCapture(-1,cv2.CAP_DSHOW)
+    
     if not cap.isOpened():
         if verbose:
             print("Failed, trying capture settings: ''0,cv2.CAP_DSHOW''")
@@ -16,11 +20,6 @@ def Initialize_camera(verbose, debug):
         if verbose:
             print("Failed, trying capture settings: ''1,cv2.CAP_DSHOW''")
         cap = cv2.VideoCapture(1,cv2.CAP_DSHOW)
-        
-    if not cap.isOpened():
-        if verbose:
-            print("Failed, trying capture settings: ''-1''")
-        cap = cv2.VideoCapture(-1)
         
     if not cap.isOpened():
         if verbose:
