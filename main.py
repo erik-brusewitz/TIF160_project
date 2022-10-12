@@ -43,7 +43,6 @@ def main():
     shapes = ["Quadrilateral", "Pentagon", "Hexagon"]
     print("Searching for the shapes...")
     for shape in shapes:
-        shape = "Hexagon"
         instructions.get_shape(cap, hubert, shape, verbose, debug)
     instructions.set_default_position(hubert)
     print("All shapes have been put into the correct containers. Program is finished")

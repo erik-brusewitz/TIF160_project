@@ -8,7 +8,7 @@ import Robot_Control.serialCommunication as sc
 # - .info() to get the information about the servo 
 # - .move( angle ) move the servo to that specific angle
 class servo:
-    def __init__(self, arduino, verbose, debug, servo_id, minPosition, maxPosition, minAngle, maxAngle):
+    def __init__(self, arduino, verbose, debug, servo_id, minPosition, maxPosition, minAngle, maxAngle, flip_angle_direction):
         self.arduino = arduino
         self.verbose = verbose
         self.debug = debug
@@ -16,9 +16,10 @@ class servo:
         self.minPosition = minPosition
         self.maxPosition = maxPosition
         self.range = abs(maxAngle - minAngle)
-        self.minAngle = minAngle
-        self.maxAngle = maxAngle
+        self.minAngle = maxAngle
+        self.maxAngle = minAngle
         self.currentAngle = minAngle #default is set to minAngle, should probably be something else?
+        self.flip_angle_direction = flip_angle_direction
 
     def info(self):
         print("servo_id:", self.servo_id, "\nMin Angle: ", self.minAngle, "\nMax Angle: ", self.maxAngle, "\nMin Position:", self.minPosition, "\nMax Position: ", self.maxPosition, "\nCurrent Angle: ", self.currentAngle)
@@ -27,7 +28,12 @@ class servo:
         if self.verbose:
             print('Start the communication to move servo')
         tmp = newAngle - self.minAngle
-        self.position = int(self.minPosition + (tmp / self.range) * ( self.maxPosition - self.minPosition))
+        
+        if self.flip_angle_direction:
+            self.position = int(self.maxPosition + (tmp / self.range) * ( self.maxPosition - self.minPosition))
+        else:
+            self.position = int(self.minPosition + (tmp / self.range) * ( self.maxPosition - self.minPosition))
+            
         position_string = str(self.position)
         if self.position < 550 or self.position > 2400:
             print("Error, position is too large or too low")
@@ -65,7 +71,7 @@ class robot:
         if verbose:
             print("Initializing servos...")
         self.bodyMotor = servo(self.arduino,self.verbose,self.debug,0,560,2330,0,pi) #0 is left facing, pi is right facing
-        self.shoulderMotor = servo(self.arduino,self.verbose,self.debug,1,750,2200,0,8*pi/9) #0 is up, 8*pi/9 (160 degrees) is down
+        self.shoulderMotor = servo(self.arduino,self.verbose,self.debug,1,750,2200,0,160*pi/180) #0 is up, 8*pi/9 (160 degrees) is down
         self.elbowMotor = servo(self.arduino,self.verbose, self.debug,2,550,1600,-50*pi/180,35*pi/180) # 1100 is 0 degrees, 550 is about -50 degrees, 2400 is the max value, but the servo cant handle higher than 1600 = 35 degrees.
         self.wristMotor = servo(self.arduino,self.verbose, self.debug,3,550,2400,-0.22*pi,0.78*pi) #-22pi is close to the 0 positon at 950, then it rotates counter clockwise when moving to 0.78pi.
         self.gripperMotor = servo(self.arduino,self.verbose, self.debug,4,550,2150,0,1) #0 is open, 1 is closed

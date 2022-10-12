@@ -25,7 +25,7 @@ def initialize_robot(serial_port, verbose, debug):
 def set_default_position(hubert):
     print("Setting Hubert to default position...")
     hubert.move("body", pi/2)
-    hubert.move("shoulder", 4*pi/9)
+    hubert.move("shoulder", 10*pi/180)
     hubert.move("elbow", 10*pi/180)
     hubert.move("wrist", 0)
     hubert.move("gripper", 0)
@@ -75,7 +75,7 @@ def find_container(hubert, shape):
     
 def get_shape(cap, hubert, shape, verbose, debug):
 
-    #set_default_position(hubert)
+    set_default_position(hubert)
     
     print("Searching for " + shape + "...")
     coordinate_data = vision.get_shape_coordinates(cap, shape, verbose, debug)

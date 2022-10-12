@@ -30,13 +30,16 @@ class direction(robot):
       # normalization of the vector and step of 2 cm
       self.vectorDir = self.vectorDir/np.linalg.norm(self.vectorDir) * self.step
       
+      if self.verbose:
+         print("Directional vector = (" + str(self.vectorDir[0]) + ", " + str(self.vectorDir[1]) + ")")
+
    def __function(self):#,z):
       sm = self.m
 
       theta__1 = sm.Var(value=self.angle[0] )      
       theta__2 = sm.Var(value=self.angle[1] )      
       theta__3 = sm.Var(value=self.angle[2] ) 
-
+      
       # lower bounds
       theta__1.LOWER = 0
       theta__2.LOWER = 0
