@@ -20,8 +20,6 @@ def initialize_robot(serial_port, verbose, debug):
     rob.sc.initialize_communication(arduino, verbose, debug)
     return rob.robot(arduino, verbose, debug)
 
-    
-
 def set_default_position(hubert):
     print("Setting Hubert to default position...")
     hubert.move("body", pi/2)

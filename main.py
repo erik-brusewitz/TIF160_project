@@ -39,6 +39,8 @@ def main():
     cap = vision.Initialize_camera(verbose, debug) 
     if verbose:
         print("Camera initialization successful")
+        
+    instructions.set_default_position()
     
     shapes = ["Quadrilateral", "Pentagon", "Hexagon"]
     print("Searching for the shapes...")
