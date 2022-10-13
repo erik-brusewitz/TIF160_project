@@ -7,6 +7,7 @@ from inverseKinematic import *
 
 def initialize_robot(serial_port, verbose, debug):
 
+    serial_port = '/dev/cu.usbmodem11301'
     if verbose:
         print("Initializing robot software...")
     print("Initializing arduino with serial port " + serial_port)
@@ -56,6 +57,8 @@ def move_hand_to_position(hubert, cap, shape, hand_pos, target_pos, verbose, deb
             hand_coordinates = coordinate_data[0]
             shape_coordinates = coordinate_data[1]
         
+
+            
             if hand_coordinates == [9999,9999]:
                 if verbose: print("Hand not found, searching for hand...")
                 coordinate_data = search_for_hand(hubert) #todo: move the head to forward position, or untill hand is found (maybe move hand a bit). This function shouldnt be needed.
@@ -75,20 +78,20 @@ def move_hand_towards_position(hubert, hand_pos, target_pos, verbose, debug):
     if verbose:
         print("Trying to move hand to position...")
         print("Hand at position (" + str(hand_pos[0]) + ", " + str(hand_pos[1]) + ")\nTarget position: (" + str(target_pos[0]) + ", " + str(target_pos[1]) + ")")
-    step = 0.1
+    #step = 0.1
     vector_length = 2
-    dirc = direction(hubert, step, vector_length, verbose, debug)
-    if (dirc.motion(hand_pos,target_pos) == -1):
-        print("Failed to find solution, trying with step 0.001")
-        step = 0.001
-        dirc = direction(hubert, step, vector_length, verbose, debug)
+    dirc = direction(hubert, vector_length, verbose, debug)
+    if (dirc.motion(hand_pos,target_pos, 0.005) == -1):
+        print("Failed to find solution, trying with error 0.01")
+        #step = 0.0
+        #dirc = direction(hubert, step, vector_length, verbose, debug)
 
-    if (dirc.motion(hand_pos,target_pos) == -1):
-        print("Failed to find solution, trying with step 0.0001")
-        step = 0.0001
-        dirc = direction(hubert, step, vector_length, verbose, debug)
+    if (dirc.motion(hand_pos,target_pos, 0.01) == -1):
+        print("Failed to find solution, trying with step 0.025")
+        #step = 0.0001
+        #dirc = direction(hubert, step, vector_length, verbose, debug)
 
-    if (dirc.motion(hand_pos,target_pos) == -1):
+    if (dirc.motion(hand_pos,target_pos, 0.025) == -1):
         print("Failed to find solution with step 0.0001, try moving the shape closer to the robot.")
         print("Pausing program for 5 seconds...")
         time.sleep(5)

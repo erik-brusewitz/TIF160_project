@@ -5,9 +5,9 @@ from Robot_Control.robotControl import robot
 
 class direction(robot):
    
-   def __init__(self, hubert, step, vector_length, verbose, debug):
+   def __init__(self, hubert, vector_length, verbose, debug):
       self.m = GEKKO()
-      self.step = step
+      self.step = 0.03
       self.vector_length = vector_length #not in use atm
       self.verbose = verbose
       self.debug = debug
@@ -51,10 +51,20 @@ class direction(robot):
       theta__2.UPPER = pi
       theta__3.UPPER = 35*pi/180
 
-      x = (self.posArm[0] + self.vectorDir[0])
-      y = (self.posArm[1] + self.vectorDir[1])
-      z = (self.posArm[2])
-      
+      # Variables
+      x = sm.Var(value=self.posArm[0] + self.vectorDir[0])
+      y = sm.Var(value=self.posArm[1] + self.vectorDir[1])
+      z = sm.Var(value=0.14)
+
+      # lower bounds
+      x.LOWER = self.posArm[0] + self.vectorDir[0]-self.error
+      y.LOWER = self.posArm[1] + self.vectorDir[1]-self.error
+      z.LOWER = 0.14
+
+      # upper bounds
+      x.UPPER = self.posArm[0] + self.vectorDir[0]+self.error
+      y.UPPER = self.posArm[1] + self.vectorDir[1]+self.error
+      z.UPPER = 0.16
       
        # equation 
       sm.Equations([
@@ -94,7 +104,9 @@ class direction(robot):
       self.angle[2] = theta__3 
 
    # hand position, shape position 
-   def motion(self, arm, shape):
+   def motion(self, arm, shape, error):
+      self.m.clear()
+      self.error = error
       self.camera_posArm = arm 
       self.camera_posShape = shape
       self.camera_posArm[1] = 1 - self.camera_posArm[1]
