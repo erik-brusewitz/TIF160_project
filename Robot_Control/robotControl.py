@@ -28,10 +28,8 @@ class servo:
         if self.debug: self.info()
         tmp = newAngle - self.minAngle
         if self.flip_angle_direction:
-            if self.debug: print("True :)")
             self.position = int(self.maxPosition - (tmp / self.range) * ( self.maxPosition - self.minPosition))
         else:
-            if self.debug: print("False :(")
             self.position = int(self.minPosition + (tmp / self.range) * ( self.maxPosition - self.minPosition))
             
         position_string = str(self.position)

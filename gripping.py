@@ -5,8 +5,10 @@ from Robot_Control.robotControl import robot
 
 class grip(robot):
    
-   def __init__(self, hubert):
+   def __init__(self, hubert, verbose, debug):
       self.m = GEKKO()
+      self.verbose = verbose
+      self.debug = debug
       # self.vector_length = vector_length #not in use atm
       # self.verbose = verbose
       # self.debug = debug
@@ -72,7 +74,7 @@ class grip(robot):
       theta__2 = self.hubert.get_angle('shoulder')
       theta__3 = self.hubert.get_angle('elbow')
       
-      if self.debug:
+      if (self.debug):
         print("Printing body angles...")
         print("Body angle: " + str(theta__1) + "\nShoulder angle: " + str(theta__2) + "\nElbow angle: " + str(theta__3))
 
@@ -86,13 +88,9 @@ class grip(robot):
       self.angle[2] = theta__3 
 
    # hand position, shape position 
-   def motion(self, arm, shape, error):
+   def motion(self, error):
       self.m.clear()
       self.error = error
-      self.camera_posArm = arm 
-      self.camera_posShape = shape
-      self.camera_posArm[1] = 1 - self.camera_posArm[1]
-      self.camera_posShape[1] = 1 - self.camera_posShape[1]
       #self.angle = angle # in the final code will be taken from the robot class
 
       # extract the value from the object robot 

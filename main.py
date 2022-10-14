@@ -13,15 +13,14 @@ def camera_test(cap):
         if cv2.waitKey(1) == ord('q'):
             print("Camera exited manually")
             return -1
-        time.sleep(0.01)
+#         time.sleep(0.01)
+        
+
 
 def main():
     print("Starting program...")
 
     parser = argparse.ArgumentParser(description="")
-    #parser.add_argument('integers', metavar='N', type=int, nargs='+', help='an integer for the accumulator')
-    #parser.add_argument('--sum', dest='accumulate', action='store_const', const=sum, default=max, help='sum the integers (default: find the max)')
-    
     parser.add_argument("-p", "--port", help = "Required argument: sets the arduino communications port")
     parser.add_argument("-v", "--verbose", action = "store_true", help = "Prints more text when running the program")
     parser.add_argument("-d", "--debug", action = "store_true", help = "Prints even more text than verbose, used for debugging")
@@ -40,10 +39,11 @@ def main():
         print("Serial port is set to " + serial_port)   
     else:
         print("Port not set, defaulting to /dev/ttyACM0")
-        serial_port = "/dev/ttyACM0"
+        #serial_port = "/dev/ttyACM0"
+        serial_port = "COM7"
         print("Also setting verbose and debug to true")
         verbose = True
-        debug = False
+        debug = True
         
 
     hubert = instructions.initialize_robot(serial_port, verbose, debug)

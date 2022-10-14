@@ -91,14 +91,17 @@ class direction(robot):
       theta__3 = self.hubert.get_angle('elbow')
       
       if self.debug:
-        print("Printing body angles...")
-        print("Body angle: " + str(theta__1) + "\nShoulder angle: " + str(theta__2) + "\nElbow angle: " + str(theta__3))
+         print("Printing body angles...")
+         print("Body angle: " + str(theta__1) + "\nShoulder angle: " + str(theta__2) + "\nElbow angle: " + str(theta__3))
 
       self.posArm[0] = ((0.204*sin(theta__3) + 0.015)*cos(theta__2) + (0.204*cos(theta__3) + 0.088)*sin(theta__2) + 0.034)*cos(theta__1) + 0.103*sin(theta__1)
       self.posArm[1] = ((0.204*sin(theta__3) + 0.015)*cos(theta__2) + (0.204*cos(theta__3) + 0.088)*sin(theta__2) + 0.034)*sin(theta__1) - 0.103*cos(theta__1)
       self.posArm[2] = (-0.204*cos(theta__3) - 0.088)*cos(theta__2) + (0.204*sin(theta__3) + 0.015)*sin(theta__2) + 0.360
 
-
+      if (self.verbose):
+         print("########")  
+         print("New body angle = " + str(theta__1) + "\nNew shoulder angle = " + str(theta__2) + "\nNew elbow angle = " + str(theta__3) + "/n")
+         print("########")
       self.angle[0] = theta__1 
       self.angle[1] = theta__2 
       self.angle[2] = theta__3 

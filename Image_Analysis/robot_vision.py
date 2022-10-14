@@ -4,7 +4,9 @@ def Initialize_camera(verbose, debug):
     print("Initializing camera...")
     if verbose:
         print("Trying capture settings: ''-1''")
-    cap = cv2.VideoCapture(-1) #cv2.CAP_DSHOW is used to reduce the time taken to open the ext. camera
+    #cap = cv2.VideoCapture(-1,cv2.CAP_DSHOW) #cv2.CAP_DSHOW is used to reduce the time taken to open the ext. camera
+    cap = cv2.VideoCapture(1,cv2.CAP_DSHOW) #cv2.CAP_DSHOW is used to reduce the time taken to open the ext. camera
+    cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
 
     if not cap.isOpened():
         if verbose:
@@ -41,6 +43,7 @@ def Initialize_camera(verbose, debug):
 def get_shape_coordinates(cap, shape, verbose, debug):
     pick_up = 1
     coord_matrix = Shape_dectection(cap, shape, pick_up, verbose, debug)
+    print(coord_matrix)
     # if (coord_matrix == [9999,9999]):
         # print("Failed to get shape coordinates")
         # print("Exiting program")

@@ -8,7 +8,6 @@ from gripping import *
 
 def initialize_robot(serial_port, verbose, debug):
 
-    serial_port = '/dev/cu.usbmodem11301'
     if verbose:
         print("Initializing robot software...")
     print("Initializing arduino with serial port " + serial_port)
@@ -82,17 +81,17 @@ def move_hand_towards_position(hubert, hand_pos, target_pos, verbose, debug):
     #step = 0.1
     vector_length = 2
     dirc = direction(hubert, vector_length, verbose, debug)
-    if (dirc.motion(hand_pos,target_pos, 0.005) == -1):
+    if (dirc.motion(hand_pos,target_pos, error = 0.005) == -1):
         print("Failed to find solution, trying with error 0.01")
         #step = 0.0
         #dirc = direction(hubert, step, vector_length, verbose, debug)
 
-    if (dirc.motion(hand_pos,target_pos, 0.01) == -1):
+    if (dirc.motion(hand_pos,target_pos, error = 0.01) == -1):
         print("Failed to find solution, trying with step 0.025")
         #step = 0.0001
         #dirc = direction(hubert, step, vector_length, verbose, debug)
 
-    if (dirc.motion(hand_pos,target_pos, 0.025) == -1):
+    if (dirc.motion(hand_pos,target_pos, error = 0.025) == -1):
         print("Failed to find solution with step 0.0001, try moving the shape closer to the robot.")
         print("Pausing program for 5 seconds...")
         time.sleep(5)
@@ -134,8 +133,9 @@ def get_shape(cap, hubert, shape, verbose, debug):
 
     while True:
         if move_hand_to_position(hubert, cap, shape, hand_coordinates, shape_coordinates, verbose, debug):
-            grp = grip(hubert)
+            grp = grip(hubert, verbose. debug)
             print("Gripping shape...")
+            grp.motion(error = 0.05)
             # hubert.move("gripper", 0.9)
             # hubert.move("shoulder", 0.1)
             # hubert.move("elbow", 7*pi/36)

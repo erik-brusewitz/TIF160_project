@@ -103,7 +103,7 @@ def Shape_dectection(cap,shape,pick_up,verbose,debug):
     if coord_matrix[1] ==[] and distance_bw_rd_green <=0.2:
         final_cords[1] = coord_matrix[2]
     elif coord_matrix[1] ==[] and distance_bw_rd_green >=0.4:
-        final_cords[1] = [7777,7777] #prevent going to next red color 
+        final_cords[1] = [8888,8888] #prevent going to next red color 
     else:  #as long as the shape is visible
         final_cords[1] = coord_matrix[1]
 
