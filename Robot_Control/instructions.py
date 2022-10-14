@@ -4,6 +4,7 @@ import time
 import serial
 from math import *
 from inverseKinematic import *
+from gripping import * 
 
 def initialize_robot(serial_port, verbose, debug):
 
@@ -133,12 +134,12 @@ def get_shape(cap, hubert, shape, verbose, debug):
 
     while True:
         if move_hand_to_position(hubert, cap, shape, hand_coordinates, shape_coordinates, verbose, debug):
-
+            grp = grip(hubert)
             print("Gripping shape...")
-            hubert.move("gripper", 0.9)
-            hubert.move("shoulder", 0.1)
-            hubert.move("elbow", 7*pi/36)
-            hubert.move("body", pi)
+            # hubert.move("gripper", 0.9)
+            # hubert.move("shoulder", 0.1)
+            # hubert.move("elbow", 7*pi/36)
+            # hubert.move("body", pi)
             print("Looking for correct container...")
             container_coordinaates = vision.get_container_coordinates(cap, shape, verbose, debug)
             if container_coordinaates[1] == [9999,9999]:
