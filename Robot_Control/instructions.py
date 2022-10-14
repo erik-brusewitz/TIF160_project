@@ -4,7 +4,8 @@ import time
 import serial
 from math import *
 from inverseKinematic import *
-from gripping import * 
+from gripping import *
+import cv2
 
 def initialize_robot(serial_port, verbose, debug):
 
@@ -52,6 +53,14 @@ def move_hand_to_position(hubert, cap, shape, hand_pos, target_pos, verbose, deb
             print("Trying to move hand towards object position...")
             print("Hand at position (" + str(hand_pos[0]) + ", " + str(hand_pos[1]) + ")\Object position: (" + str(target_pos[0]) + ", " + str(target_pos[1]) + ")")
     while True:
+
+
+        ret, frame = cap.read()
+        cv2.imshow('shapes', frame)
+        if cv2.waitKey(1) == ord('q'):
+            print("Camera exited manually")
+            return -1
+
         if (move_hand_towards_position(hubert, hand_pos, target_pos, verbose, debug)):
             coordinate_data = vision.get_shape_coordinates(cap, shape, verbose, debug)
             hand_coordinates = coordinate_data[0]
@@ -104,8 +113,9 @@ def search_for_container(hubert, shape, verbose, debug):
     hubert.move("body", pi)
     for i in range(16):
         #container_coordinaates = vision.get_container_coordinates(shape)
-        container_coordinaates = vision.get_container_coordinates(cap, shape, verbose, debug)
-        if container_coordinaates != [9999,9999]:
+        container_data = vision.get_container_coordinates(cap, shape, verbose, debug)
+        container_coordinates = container_data[1]
+        if container_coordinates != [9999,9999]:
             print("Found container for " + shape)
             return container_coordinates
         hubert.move("body", pi - pi*i/32)
@@ -132,23 +142,24 @@ def get_shape(cap, hubert, shape, verbose, debug):
         shape_coordinates = coordinate_data[1]
 
     while True:
+        
         if move_hand_to_position(hubert, cap, shape, hand_coordinates, shape_coordinates, verbose, debug):
-            grp = grip(hubert, verbose. debug)
             print("Gripping shape...")
+            grp = grip(hubert, verbose, debug)
             grp.motion(error = 0.05)
             # hubert.move("gripper", 0.9)
             # hubert.move("shoulder", 0.1)
             # hubert.move("elbow", 7*pi/36)
             # hubert.move("body", pi)
             print("Looking for correct container...")
-            container_coordinaates = vision.get_container_coordinates(cap, shape, verbose, debug)
-            if container_coordinaates[1] == [9999,9999]:
+            container_data = vision.get_container_coordinates(cap, shape, verbose, debug) #container data contains both the hand and the container coordinates
+            hand_coordinates = container_data[0]
+            container_coordinates = container_data[1]
+            if container_coordinates == [9999,9999]:
                 container_coordinates = search_for_container(hubert, shape, verbose, debug)
-                
-            #container_coordinaates = vision.get_container_coordinates(shape)
-            container_coordinaates = vision.get_container_coordinates(cap, shape, verbose, debug)
+
             print("Dropping shape in container...")
-            move_hand_to_position(hubert, cap, shape, hand_coordinates, container_coordinaates, verbose, debug)
+            move_hand_to_position(hubert, cap, shape, hand_coordinates, container_coordinates, verbose, debug)
             hubert.move("gripper", 0)
             
             print("#################")

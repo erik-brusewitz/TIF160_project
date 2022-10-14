@@ -21,7 +21,12 @@ def Shape_dectection(cap,shape,pick_up,verbose,debug):
         print("Can't receive frame (stream end?)")
         return -1
 
-    cv2.imshow('shapes', frame)
+    # cv2.imshow('shapes', frame)
+    # if cv2.waitKey(1) == ord('q'):
+    #     print("Camera exited manually")
+    #     return -1
+    
+
     
     imgGry = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)  
 
