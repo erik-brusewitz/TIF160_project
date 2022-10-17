@@ -24,14 +24,14 @@ class direction(robot):
       # the vector has to be rotated in the absolute reference frame because now is expressed in the camera reference frame 
       # head_angle = self.hubert.get_angle('head')
       # body_angle = self.hubert.get_angle('body')
-      # theta = body_angle # + head angle in case we move it 
+      # theta = body_angle - pi/2# + head angle in case we move it 
       # c, s = np.cos(theta), np.sin(theta)
       # R = np.array(((c, -s), (s, c)))
       # self.vectorDir = R.dot(self.vectorDir)
       # normalization of the vector and step of 2 cm
       self.step = np.linalg.norm(self.vectorDir) * 0.08 / 0.35
       if self.step >= 0.03:
-         self.step /= 2
+         self.step = 0.03
       self.vectorDir = self.vectorDir/np.linalg.norm(self.vectorDir) * self.step
       
       if self.debug:
@@ -57,12 +57,12 @@ class direction(robot):
       # Variables
       x = sm.Var(value=self.posArm[0] + self.vectorDir[0])
       y = sm.Var(value=self.posArm[1] + self.vectorDir[1])
-      z = sm.Var(value=0.14)
+      z = sm.Var(value=0.15)
 
       # lower bounds
       x.LOWER = self.posArm[0] + self.vectorDir[0]-self.error
       y.LOWER = self.posArm[1] + self.vectorDir[1]-self.error
-      z.LOWER = 0.14
+      z.LOWER = 0.135
 
       # upper bounds
       x.UPPER = self.posArm[0] + self.vectorDir[0]+self.error
@@ -132,6 +132,8 @@ class direction(robot):
       # calculate numerically the new position of the arm
       if self.__function() == -1:
          return -1
+      else: 
+         return 1
 
 
 

@@ -44,12 +44,12 @@ class grip(robot):
       # lower bounds
       x.LOWER = self.posArm[0]-self.error
       y.LOWER = self.posArm[1]-self.error
-      z.LOWER = 0.13
+      z.LOWER = 0.1325
 
       # upper bounds
       x.UPPER = self.posArm[0]+self.error
       y.UPPER = self.posArm[1]+self.error
-      z.UPPER = 0.135
+      z.UPPER = 0.1375
       
        # equation 
       sm.Equations([

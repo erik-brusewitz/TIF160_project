@@ -56,6 +56,10 @@ def move_hand_to_position(hubert, cap, shape, verbose, debug):
         hand_coordinates = coordinate_data[0]
         shape_coordinates = coordinate_data[1]
 
+        if (shape_coordinates == [8888,8888]): #shape found
+            print("Shape position reached!")
+            return True
+
         if (move_hand_towards_position(hubert, hand_coordinates, shape_coordinates, verbose, debug)):
 
             if hand_coordinates == [4444,4444]: #hand not found
@@ -64,9 +68,7 @@ def move_hand_to_position(hubert, cap, shape, verbose, debug):
             if shape_coordinates == [7777,7777]: #shape not found
                 coordinate_data = search_for_shape(hubert, shape, cap, debug, verbose)
             
-        if (shape_coordinates == [8888,8888]): #shape found
-            print("Shape position reached!")
-            return True
+        
 
 def move_hand_towards_position(hubert, hand_pos, target_pos, verbose, debug):
     
@@ -76,29 +78,36 @@ def move_hand_towards_position(hubert, hand_pos, target_pos, verbose, debug):
     #step = 0.1
     vector_length = 2
     dirc = direction(hubert, vector_length, verbose, debug)
-    if (dirc.motion(hand_pos,target_pos, error = 0.005) == -1):
-        print("Failed to find solution, trying with error 0.01")
-    else:
-        return True
-        #step = 0.0
-        #dirc = direction(hubert, step, vector_length, verbose, debug)
 
-    if (dirc.motion(hand_pos,target_pos, error = 0.01) == -1):
-        print("Failed to find solution, trying with step 0.025")
-    else:
-        return True
-        #step = 0.0001
-        #dirc = direction(hubert, step, vector_length, verbose, debug)
+    error_values = [0.01, 0.02, 0.03, 0.005, 0.001, 0.0001]
 
-    if (dirc.motion(hand_pos,target_pos, error = 0.025) == -1):
-        print("Failed to find solution with step 0.0001, try moving the shape closer to the robot.")
-        print("Pausing program for 5 seconds...")
-        time.sleep(5)
-        return False
-    else:
-        return True
+    for i in range(len(error_values)):
+        if (verbose): print("Trying to find solution for error value" + str(error_values[i]))
+        if (dirc.motion(hand_pos,target_pos, error_values[i]) == -1):
+            if (verbose): print("Failed to find solution")
+        else:
+            if verbose: print("Solution found!")
+            return True
+    print("Moving arm failed, trying again...")
+    return move_hand_towards_position(hubert, hand_pos, target_pos, verbose, debug)
+
+
+def grip_shape(hubert, verbose, debug):
+
+    grp = grip(hubert, verbose, debug)
+    error_values = [0.01, 0.02, 0.03, 0.005, 0.001, 0.0001]
+
+    for i in range(len(error_values)):
+        if (verbose): print("Trying to find solution for error value" + str(error_values[i]))
+        if (grp.motion(error_values[i]) == -1):
+            if (verbose): print("Failed to find solution")
+        else:
+            if verbose: print("Solution found!")
+            return True
+    print("Gripping failed, trying again...")
+    return grip_shape(hubert, verbose, debug)
     
-def search_for_container(hubert, shape, verbose, debug):
+def search_for_container(cap, hubert, shape, verbose, debug):
     print("Searching for container to " + shape + "...")
     hubert.move("body", pi)
     for i in range(16):
@@ -135,8 +144,7 @@ def get_shape(cap, hubert, shape, verbose, debug):
         
         if move_hand_to_position(hubert, cap, shape, verbose, debug):
             print("Gripping shape...")
-            grp = grip(hubert, verbose, debug)
-            grp.motion(error = 0.05)
+            grip_shape(hubert, verbose, debug)
             # hubert.move("gripper", 0.9)
             # hubert.move("shoulder", 0.1)
             # hubert.move("elbow", 7*pi/36)
@@ -146,7 +154,7 @@ def get_shape(cap, hubert, shape, verbose, debug):
             hand_coordinates = container_data[0]
             container_coordinates = container_data[1]
             if container_coordinates == [9999,9999]:
-                container_coordinates = search_for_container(hubert, shape, verbose, debug)
+                container_coordinates = search_for_container(cap, hubert, shape, verbose, debug)
 
             print("Dropping shape in container...")
             move_hand_to_position(hubert, cap, shape, hand_coordinates, container_coordinates, verbose, debug)
