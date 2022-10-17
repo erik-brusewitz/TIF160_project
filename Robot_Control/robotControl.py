@@ -8,7 +8,8 @@ from Robot_Control import serialCommunication as sc
 # - .info() to get the information about the servo 
 # - .move( angle ) move the servo to that specific angle
 class servo:
-    def __init__(self, arduino, verbose, debug, servo_id, minPosition, maxPosition, minAngle, maxAngle, flip_angle_direction):
+    def __init__(self, cap, arduino, verbose, debug, servo_id, minPosition, maxPosition, minAngle, maxAngle, flip_angle_direction):
+        self.cap = cap
         self.arduino = arduino
         self.verbose = verbose
         self.debug = debug
@@ -40,16 +41,16 @@ class servo:
             print("Error, position = " + str(self.position) + ", expected value between " + str(self.minPosition) + " and " + str(self.maxPosition))
             return 0
         if self.position < 1000:
-            sc.send_package(self.arduino, str(self.servo_id) + "0" + str(self.position), self.verbose, self.debug)
+            sc.send_package(self.cap, self.arduino, str(self.servo_id) + "0" + str(self.position), self.verbose, self.debug)
         else:
-            sc.send_package(self.arduino, str(self.servo_id) + str(self.position), self.verbose, self.debug)
+            sc.send_package(self.cap, self.arduino, str(self.servo_id) + str(self.position), self.verbose, self.debug)
         if self.debug:
             print('End the communication to move servo')
         self.currentAngle = newAngle
 
-        sleepTime = 0.3 * abs(newAngle - oldAngle)
-        if (self.verbose): print("Sleeping for " + str(sleepTime) + " seconds")
-        time.sleep(sleepTime)
+        #sleepTime = 0.3 * abs(newAngle - oldAngle)
+        #if (self.debug): print("Sleeping for " + str(sleepTime) + " seconds")
+        #time.sleep(sleepTime)
             
         return 0
         
@@ -68,20 +69,20 @@ class servo:
 # .info( "motor name" ) give the infomation about that specif servo 
 # .move( "motor name", angle ) move that specific servo to that angle
 class robot:
-    def __init__(self, arduino, verbose, debug):
-    
+    def __init__(self, cap, arduino, verbose, debug):
+        self.cap = cap
         self.arduino = arduino
         self.verbose = verbose
         self.debug = debug
         #self.arduino = serial.Serial(port='COM5', baudrate=57600, timeout=.1)
         if verbose:
             print("Initializing servos...")
-        self.bodyMotor = servo(self.arduino,self.verbose,self.debug,0,560,2330,0,pi,1) #0 is left facing, pi is right facing
-        self.shoulderMotor = servo(self.arduino,self.verbose,self.debug,1,750,2200,0,160*pi/180,1) #0 is down, 8*pi/9 (160 degrees) is up
-        self.elbowMotor = servo(self.arduino,self.verbose, self.debug,2,550,1600,-50*pi/180,35*pi/180,0) # -50 degrees i backwards, +35 degrees is forwards. (1100 is 0 degrees, 2400 is the max value, but the servo cant handle higher than 1600 = 35 degrees.)
-        self.wristMotor = servo(self.arduino,self.verbose, self.debug,3,550,2400,-39.6*pi/180,140.4*pi/180,0) #-22pi is close to the 0 positon at 950, then it rotates counter clockwise when moving to 0.78pi.
-        self.gripperMotor = servo(self.arduino,self.verbose, self.debug,4,550,2150,0,1,0) #0 is open, 1 is closed
-        self.headMotor = servo(self.arduino,self.verbose, self.debug,5,550,2340,0,pi,1) #0 is left, pi is right
+        self.bodyMotor = servo(self.cap, self.arduino,self.verbose,self.debug,0,560,2330,0,pi,1) #0 is left facing, pi is right facing
+        self.shoulderMotor = servo(self.cap, self.arduino,self.verbose,self.debug,1,750,2200,0,160*pi/180,1) #0 is down, 8*pi/9 (160 degrees) is up
+        self.elbowMotor = servo(self.cap, self.arduino,self.verbose, self.debug,2,550,1600,-50*pi/180,35*pi/180,0) # -50 degrees i backwards, +35 degrees is forwards. (1100 is 0 degrees, 2400 is the max value, but the servo cant handle higher than 1600 = 35 degrees.)
+        self.wristMotor = servo(self.cap, self.arduino,self.verbose, self.debug,3,550,2400,-39.6*pi/180,140.4*pi/180,0) #-22pi is close to the 0 positon at 950, then it rotates counter clockwise when moving to 0.78pi.
+        self.gripperMotor = servo(self.cap, self.arduino,self.verbose, self.debug,4,550,2150,0,1,0) #0 is open, 1 is closed
+        self.headMotor = servo(self.cap, self.arduino,self.verbose, self.debug,5,550,2340,0,pi,1) #0 is left, pi is right
 
     def __motorC(self, motor):
         if ( motor == 'body'):

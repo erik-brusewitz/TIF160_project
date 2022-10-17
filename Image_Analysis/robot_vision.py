@@ -1,10 +1,5 @@
 from Image_Analysis.Shape_detection import *
 
-def Search_for_shape(shape):
-
-    pass
-
-
 def Initialize_camera(verbose, debug):
     print("Initializing camera...")
     if verbose:
@@ -45,10 +40,21 @@ def Initialize_camera(verbose, debug):
         
     return cap
     
+
+def Search_for_shape(cap, shape, verbose, debug):
+    pick_up = False
+    search_for_shape = True
+    return Shape_dectection(cap, shape, pick_up, search_for_shape, verbose, debug)
+
+
 def get_shape_coordinates(cap, shape, verbose, debug):
-    pick_up = 1
-    coord_matrix = Shape_dectection(cap, shape, pick_up, verbose, debug)
-    print(coord_matrix)
+    pick_up = True
+    search_for_shape = False
+    coord_matrix = Shape_dectection(cap, shape, pick_up, search_for_shape, verbose, debug)
+    if (verbose): print(coord_matrix)
+
+    if coord_matrix[1] == [6666,6666]:
+        Search_for_shape(cap, shape, verbose, debug)
     # if (coord_matrix == [9999,9999]):
         # print("Failed to get shape coordinates")
         # print("Exiting program")
@@ -60,8 +66,9 @@ def get_shape_coordinates(cap, shape, verbose, debug):
     
 #at the moment, this is the same as the get_shape_coordinates. Should probably be changed a bit so the robot can differentiate shapes from containers.
 def get_container_coordinates(cap, shape, verbose, debug):
-    pick_up = 0
-    coord_matrix = Shape_dectection(cap, shape, pick_up, verbose, debug)
+    pick_up = False
+    search_for_shape = False
+    coord_matrix = Shape_dectection(cap, shape, pick_up, search_for_shape,verbose, debug)
     # if (coord_matrix == [9999,9999]):
         # print("Failed to get container coordinates")
         # print("Exiting program")

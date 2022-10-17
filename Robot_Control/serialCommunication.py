@@ -1,5 +1,6 @@
 import serial
 import time
+import cv2
 
 # Print iterations progress
 def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
@@ -24,10 +25,15 @@ def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, 
         print()
         
 
-def check_for_return_value(arduino, value, verbose, debug):
+def check_for_return_value(cap, arduino, value, verbose, debug):
     animation = "|/-\\"
     
-    for i in range(40):
+    for i in range(100):
+
+        ret, frame = cap.read()
+        cv2.imshow('shapes', frame)
+        cv2.waitKey(1)
+
         print(animation[i % len(animation)], end="\r")
 
         data = str(arduino.readline())
@@ -37,15 +43,15 @@ def check_for_return_value(arduino, value, verbose, debug):
             print("value = " + str(value) + ", data = " + str(data))
         if data == value:
             return True
-        time.sleep(0.2)
+        #time.sleep(0.2)
     
     return False
 
-def send_package(arduino, data, verbose, debug):
+def send_package(cap, arduino, data, verbose, debug):
     if verbose:
         print("Sending " + data)
     arduino.write(bytes(data, 'utf-8'))
-    if check_for_return_value(arduino, data, verbose, debug):
+    if check_for_return_value(cap, arduino, data, verbose, debug):
         if verbose:
             print("Data sent and received successfully")
         return True
@@ -54,10 +60,10 @@ def send_package(arduino, data, verbose, debug):
             print("Data sending failed")
         return False
 
-def initialize_communication(arduino, verbose, debug):
+def initialize_communication(cap, arduino, verbose, debug):
     print("Establishing serial communication...")
-    for i in range(10):
-        if (send_package(arduino, "99999", verbose, debug)):
+    for i in range(5):
+        if (send_package(cap, arduino, "99999", verbose, debug)):
             print("Serial communication established")
             return True
     print("Serial communication failed")

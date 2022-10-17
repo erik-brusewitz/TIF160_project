@@ -1,10 +1,11 @@
+from re import search
 from typing import final
 import numpy as np
 import cv2, math
 from Image_Analysis.color_detection import *
 #from color_detection import * #for ash's local computer
 
-def Shape_dectection(cap,shape,pick_up,verbose,debug):
+def Shape_dectection(cap,shape,pick_up,search_for_shape, verbose,debug):
     #If pick_up is 1, then the camera should find a shape to pick up
     #If pick_up is 0, the camera should find the container coordinates (centre)
     if not cap.isOpened():
@@ -25,20 +26,11 @@ def Shape_dectection(cap,shape,pick_up,verbose,debug):
     # if cv2.waitKey(1) == ord('q'):
     #     print("Camera exited manually")
     #     return -1
-    
-    ret, frame = cap.read()
-    cv2.imshow('shapes', frame)
-    if cv2.waitKey(1) == ord('q'):
-        print("Camera exited manually")
-        return -1
-    #print("Program should wait for user input...")
-    #cv2.waitKey(0)
+
     ret, frame = cap.read()
     cv2.imshow('shapes', frame)
     cv2.waitKey(1)
-    #print("Program continuing...")
 
-    
     imgGry = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)  
 
     thrash  = cv2.adaptiveThreshold(imgGry, 255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 15, 8)
@@ -118,23 +110,35 @@ def Shape_dectection(cap,shape,pick_up,verbose,debug):
                             cv2.putText(frame, 'ARM', (x, y),
                                         cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
 
+    if (search_for_shape):
+        if coord_matrix[1] == []:
+            return False
+        else:
+            return True
+
     #print("the op matrix is:" , coord_matrix)    
     #final_cords = arm + destination_matrix [1x2]
     final_cords = [[], []]
     final_cords[0] = arm_coord
     
     if (debug): print("The distance_between_red_and_green " + str(distance_between_red_and_green)) 
-    #once shape stops being recognized, we first check for nearest red color
-    if coord_matrix[1] ==[] and distance_between_red_and_green <=0.25:
-        final_cords[1] = coord_matrix[2]
-#we want to ognore the red from another shape, so any dist more than 0.25 should be avoided/cancelled
-    elif coord_matrix[1] ==[] and distance_between_red_and_green > 0.3:
-        final_cords[1] = [8888,8888]
 
-#the arm is exactly over the desired location, so we need to pick it up (or could happen when there is no
-# other red color on the screen)
-    elif coord_matrix[1] ==[] and distance_between_red_and_green == 8888:
-        final_cords[1] = [8888,8888]
+    if coord_matrix[1] == []:
+        #once shape stops being recognized, we first check for nearest red color
+        if distance_between_red_and_green <=0.25:
+            final_cords[1] = coord_matrix[2]
+        #we want to ognore the red from another shape, so any dist more than 0.25 should be avoided/cancelled
+        elif distance_between_red_and_green > 0.3:
+            final_cords[1] = [8888,8888]
+
+        #the arm is exactly over the desired location, so we need to pick it up (or could happen when there is no
+        # other red color on the screen)
+        elif distance_between_red_and_green == 8888:
+            final_cords[1] = [8888,8888]
+
+        else:
+            if (verbose): print("Big error :(")
+            final_cords[1] = [6666,6666]
 
 #arm is over the desired location, pick it up BUT there are more reds around
    

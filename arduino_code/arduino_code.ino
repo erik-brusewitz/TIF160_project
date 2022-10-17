@@ -89,7 +89,6 @@ void loop() {
     Serial.print(99999);
   }
   else if (input_data.length() == 5) {
-    Serial.print(input_data);
 
     for (int i = 0; i < 5; i++) {
       input_data_int[i] = (int) input_data[i] - 48;
@@ -98,6 +97,7 @@ void loop() {
     new_pos = 1000 * input_data_int[1] + 100 * input_data_int[2] + 10 * input_data_int[3] + 1 * input_data_int[4];
 
     move_servo(servo_id, new_pos);
+    Serial.print(input_data);
     
   } else {
     input_data = "";

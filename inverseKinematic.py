@@ -30,11 +30,11 @@ class direction(robot):
       # self.vectorDir = R.dot(self.vectorDir)
       # normalization of the vector and step of 2 cm
       self.step = np.linalg.norm(self.vectorDir) * 0.08 / 0.35
-      if self.step >= 0.03:
+      if self.step >= 0.04:
          self.step = 0.03
       self.vectorDir = self.vectorDir/np.linalg.norm(self.vectorDir) * self.step
       
-      if self.debug:
+      if self.verbose:
          print("Directional vector = (" + str(self.vectorDir[0]) + ", " + str(self.vectorDir[1]) + ")")
 
    def __function(self):#,z):
@@ -62,7 +62,7 @@ class direction(robot):
       # lower bounds
       x.LOWER = self.posArm[0] + self.vectorDir[0]-self.error
       y.LOWER = self.posArm[1] + self.vectorDir[1]-self.error
-      z.LOWER = 0.135
+      z.LOWER = 0.14
 
       # upper bounds
       x.UPPER = self.posArm[0] + self.vectorDir[0]+self.error
@@ -83,9 +83,7 @@ class direction(robot):
       except:
          return -1
       if (self.verbose):
-         print("BBBBBBBBBBBB")
          print("Inverse kinematic equation solution found, moving servos...")
-         print("BBBBBBBBBBBB")
          # solve
       # print([theta__1.value[0],theta__2.value[0],theta__3.value[0]]) # print solution
       self.hubert.move('body',theta__1.value[0])
@@ -97,7 +95,7 @@ class direction(robot):
       theta__2 = self.hubert.get_angle('shoulder')
       theta__3 = self.hubert.get_angle('elbow')
       
-      if self.verbose:
+      if self.debug:
          print("########")
          print("Old body angle: " + str(theta__1) + "\nOld shoulder angle: " + str(theta__2) + "\nOld elbow angle: " + str(theta__3))
          print("########")
@@ -105,7 +103,7 @@ class direction(robot):
       self.posArm[1] = ((0.204*sin(theta__3) + 0.015)*cos(theta__2) + (0.204*cos(theta__3) + 0.088)*sin(theta__2) + 0.034)*sin(theta__1) - 0.103*cos(theta__1)
       self.posArm[2] = (-0.204*cos(theta__3) - 0.088)*cos(theta__2) + (0.204*sin(theta__3) + 0.015)*sin(theta__2) + 0.360
 
-      if self.verbose:
+      if self.debug:
          print("########")  
          print("New body angle = " + str(theta__1) + "\nNew shoulder angle = " + str(theta__2) + "\nNew elbow angle = " + str(theta__3))
          print("########")
@@ -117,10 +115,10 @@ class direction(robot):
    def motion(self, arm, shape, error):
       self.m.clear()
       self.error = error
-      self.camera_posArm = arm 
-      self.camera_posShape = shape
-      self.camera_posArm[1] = 1 - self.camera_posArm[1]
-      self.camera_posShape[1] = 1 - self.camera_posShape[1]
+      self.camera_posArm = arm.copy() 
+      self.camera_posShape = shape.copy()
+      self.camera_posArm[1] = 1 - arm[1]
+      self.camera_posShape[1] = 1 - shape[1]
       #self.angle = angle # in the final code will be taken from the robot class
       
       # direction vector to the shape

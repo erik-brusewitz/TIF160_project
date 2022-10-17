@@ -39,20 +39,17 @@ def main():
         print("Serial port is set to " + serial_port)   
     else:
         print("Port not set, defaulting to /dev/ttyACM0")
-        #serial_port = "/dev/ttyACM0"
-        serial_port = "COM7"
-        print("Also setting verbose and debug to true")
-        verbose = False
-        debug = False
-        
+        serial_port = "/dev/ttyACM0"
 
-    hubert = instructions.initialize_robot(serial_port, verbose, debug)
-    if verbose:
-        print("Robot initialization successful")
-    
     cap = vision.Initialize_camera(verbose, debug) 
     if verbose:
         print("Camera initialization successful")
+
+    hubert = instructions.initialize_robot(cap, serial_port, verbose, debug)
+    if verbose:
+        print("Robot initialization successful")
+    
+    
     #camera_test(cap)
 
     instructions.set_default_position(hubert)
