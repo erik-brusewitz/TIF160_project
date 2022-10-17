@@ -157,7 +157,7 @@ def get_shape(cap, hubert, shape, verbose, debug):
                 container_coordinates = search_for_container(cap, hubert, shape, verbose, debug)
 
             print("Dropping shape in container...")
-            move_hand_to_position(hubert, cap, shape, hand_coordinates, container_coordinates, verbose, debug)
+            #move_hand_to_position(hubert, cap, shape, hand_coordinates, container_coordinates, verbose, debug)
             hubert.move("gripper", 0)
             
             print("#################")

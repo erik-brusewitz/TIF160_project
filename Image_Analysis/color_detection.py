@@ -4,7 +4,7 @@
 import numpy as np
 import cv2,math
 
-def color_detection(imageFrame):
+def color_detection(imageFrame, verbose, debug):
 
 	hsvFrame = cv2.cvtColor(imageFrame, cv2.COLOR_BGR2HSV)
 
@@ -116,9 +116,10 @@ def color_detection(imageFrame):
 	# print("red matrix is: ", red_color_matrix)
 	# # print("cloests red: ", closest_red)
 	# print("list: ", dist_red_green)
-	print("AAAAAAAAAAAAAAAAAAAAAAA")
-	print(red_color_matrix[closest_red])
-	print("AAAAAAAAAAAAAAAAAAAAAAAAAA")
+	if debug:
+		print("AAAAAAAAAAAAAAAAAAAAAAA")
+		print(red_color_matrix[closest_red])
+		print("AAAAAAAAAAAAAAAAAAAAAAAAAA")
 	# Creating contour to track green color
 	if green_color_array !=[]:
 		return(green_color_array, red_color_matrix[closest_red])

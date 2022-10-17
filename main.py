@@ -42,8 +42,8 @@ def main():
         #serial_port = "/dev/ttyACM0"
         serial_port = "COM7"
         print("Also setting verbose and debug to true")
-        verbose = True
-        debug = True
+        verbose = False
+        debug = False
         
 
     hubert = instructions.initialize_robot(serial_port, verbose, debug)

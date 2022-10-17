@@ -1,5 +1,10 @@
 from Image_Analysis.Shape_detection import *
 
+def Search_for_shape(shape):
+
+    pass
+
+
 def Initialize_camera(verbose, debug):
     print("Initializing camera...")
     if verbose:

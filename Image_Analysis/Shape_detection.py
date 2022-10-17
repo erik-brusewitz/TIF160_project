@@ -31,12 +31,12 @@ def Shape_dectection(cap,shape,pick_up,verbose,debug):
     if cv2.waitKey(1) == ord('q'):
         print("Camera exited manually")
         return -1
-    print("Program should wait for user input...")
+    #print("Program should wait for user input...")
     #cv2.waitKey(0)
     ret, frame = cap.read()
     cv2.imshow('shapes', frame)
     cv2.waitKey(1)
-    print("Program continuing...")
+    #print("Program continuing...")
 
     
     imgGry = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)  
@@ -46,7 +46,7 @@ def Shape_dectection(cap,shape,pick_up,verbose,debug):
     i = 0
     coord_matrix=[[],[],[]]
     
-    (arm_coord,closest_red)=color_detection(frame)
+    (arm_coord,closest_red)=color_detection(frame, verbose, debug)
     coord_matrix[0] = arm_coord
 
     if arm_coord == []: return [4444,4444] #hand not found
@@ -123,7 +123,7 @@ def Shape_dectection(cap,shape,pick_up,verbose,debug):
     final_cords = [[], []]
     final_cords[0] = arm_coord
     
-    print("The distance_between_red_and_green " + str(distance_between_red_and_green)) 
+    if (debug): print("The distance_between_red_and_green " + str(distance_between_red_and_green)) 
     #once shape stops being recognized, we first check for nearest red color
     if coord_matrix[1] ==[] and distance_between_red_and_green <=0.25:
         final_cords[1] = coord_matrix[2]
