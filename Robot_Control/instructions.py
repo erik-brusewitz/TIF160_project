@@ -48,55 +48,45 @@ def search_for_hand(hubert):
     a = hubert.get_angle("body")
     b = hubert.get_angle("head")
     
-def move_hand_to_position(hubert, cap, shape, hand_pos, target_pos, verbose, debug):
-    if verbose:
-            print("Trying to move hand towards object position...")
-            print("Hand at position (" + str(hand_pos[0]) + ", " + str(hand_pos[1]) + ")\Object position: (" + str(target_pos[0]) + ", " + str(target_pos[1]) + ")")
+def move_hand_to_position(hubert, cap, shape, verbose, debug):
+    
     while True:
 
+        coordinate_data = vision.get_shape_coordinates(cap, shape, verbose, debug)
+        hand_coordinates = coordinate_data[0]
+        shape_coordinates = coordinate_data[1]
 
-        ret, frame = cap.read()
-        cv2.imshow('shapes', frame)
-        if cv2.waitKey(1) == ord('q'):
-            print("Camera exited manually")
-            return -1
+        if (move_hand_towards_position(hubert, hand_coordinates, shape_coordinates, verbose, debug)):
 
-        if (move_hand_towards_position(hubert, hand_pos, target_pos, verbose, debug)):
-            coordinate_data = vision.get_shape_coordinates(cap, shape, verbose, debug)
-            hand_coordinates = coordinate_data[0]
-            shape_coordinates = coordinate_data[1]
-        
-
-            
-            if hand_coordinates == [9999,9999]:
-                if verbose: print("Hand not found, searching for hand...")
+            if hand_coordinates == [4444,4444]: #hand not found
                 coordinate_data = search_for_hand(hubert) #todo: move the head to forward position, or untill hand is found (maybe move hand a bit). This function shouldnt be needed.
             
-            if shape_coordinates == [9999,9999]:
+            if shape_coordinates == [7777,7777]: #shape not found
                 coordinate_data = search_for_shape(hubert, shape, cap, debug, verbose)
             
-            hand_pos = coordinate_data[0]
-            target_pos = coordinate_data[1]
-
-        if (target_pos == [8888,8888]):
+        if (shape_coordinates == [8888,8888]): #shape found
             print("Shape position reached!")
             return True
 
 def move_hand_towards_position(hubert, hand_pos, target_pos, verbose, debug):
     
     if verbose:
-        print("Trying to move hand to position...")
+        print("Moving hand to position...")
         print("Hand at position (" + str(hand_pos[0]) + ", " + str(hand_pos[1]) + ")\nTarget position: (" + str(target_pos[0]) + ", " + str(target_pos[1]) + ")")
     #step = 0.1
     vector_length = 2
     dirc = direction(hubert, vector_length, verbose, debug)
     if (dirc.motion(hand_pos,target_pos, error = 0.005) == -1):
         print("Failed to find solution, trying with error 0.01")
+    else:
+        return True
         #step = 0.0
         #dirc = direction(hubert, step, vector_length, verbose, debug)
 
     if (dirc.motion(hand_pos,target_pos, error = 0.01) == -1):
         print("Failed to find solution, trying with step 0.025")
+    else:
+        return True
         #step = 0.0001
         #dirc = direction(hubert, step, vector_length, verbose, debug)
 
@@ -105,8 +95,8 @@ def move_hand_towards_position(hubert, hand_pos, target_pos, verbose, debug):
         print("Pausing program for 5 seconds...")
         time.sleep(5)
         return False
-
-    return True
+    else:
+        return True
     
 def search_for_container(hubert, shape, verbose, debug):
     print("Searching for container to " + shape + "...")
@@ -143,7 +133,7 @@ def get_shape(cap, hubert, shape, verbose, debug):
 
     while True:
         
-        if move_hand_to_position(hubert, cap, shape, hand_coordinates, shape_coordinates, verbose, debug):
+        if move_hand_to_position(hubert, cap, shape, verbose, debug):
             print("Gripping shape...")
             grp = grip(hubert, verbose, debug)
             grp.motion(error = 0.05)

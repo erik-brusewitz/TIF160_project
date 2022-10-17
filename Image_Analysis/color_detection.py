@@ -96,7 +96,9 @@ def color_detection(imageFrame):
 	dist_red_green = []
 	if len(red_color_matrix) == 0:
 		dist_red_green.append(4)
-		red_color_matrix.append([3,3])		
+		#red_color_matrix.append([3,3])		
+
+		red_color_matrix.append([8888,8888])		
 
 	else:
 	

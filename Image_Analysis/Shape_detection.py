@@ -26,6 +26,17 @@ def Shape_dectection(cap,shape,pick_up,verbose,debug):
     #     print("Camera exited manually")
     #     return -1
     
+    ret, frame = cap.read()
+    cv2.imshow('shapes', frame)
+    if cv2.waitKey(1) == ord('q'):
+        print("Camera exited manually")
+        return -1
+    print("Program should wait for user input...")
+    #cv2.waitKey(0)
+    ret, frame = cap.read()
+    cv2.imshow('shapes', frame)
+    cv2.waitKey(1)
+    print("Program continuing...")
 
     
     imgGry = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)  
@@ -37,8 +48,14 @@ def Shape_dectection(cap,shape,pick_up,verbose,debug):
     
     (arm_coord,closest_red)=color_detection(frame)
     coord_matrix[0] = arm_coord
+
+    if arm_coord == []: return [4444,4444] #hand not found
+
     coord_matrix[2] = closest_red
-    distance_bw_rd_green = math.sqrt((arm_coord[0] - closest_red[0])**2+(arm_coord[1] - closest_red[1])**2)
+    if closest_red == [8888,8888]:
+        distance_between_red_and_green = 8888
+    else:
+        distance_between_red_and_green = math.sqrt((arm_coord[0] - closest_red[0])**2+(arm_coord[1] - closest_red[1])**2)
     # print(arm_coord)
     # list for storing names of shapes
     for contour in contours:
@@ -104,11 +121,23 @@ def Shape_dectection(cap,shape,pick_up,verbose,debug):
     #print("the op matrix is:" , coord_matrix)    
     #final_cords = arm + destination_matrix [1x2]
     final_cords = [[], []]
-    final_cords[0] = arm_coord 
-    if coord_matrix[1] ==[] and distance_bw_rd_green <=0.2:
+    final_cords[0] = arm_coord
+    
+    print("The distance_between_red_and_green " + str(distance_between_red_and_green)) 
+    #once shape stops being recognized, we first check for nearest red color
+    if coord_matrix[1] ==[] and distance_between_red_and_green <=0.25:
         final_cords[1] = coord_matrix[2]
-    elif coord_matrix[1] ==[] and distance_bw_rd_green >=0.4:
-        final_cords[1] = [8888,8888] #prevent going to next red color 
+#we want to ognore the red from another shape, so any dist more than 0.25 should be avoided/cancelled
+    elif coord_matrix[1] ==[] and distance_between_red_and_green > 0.3:
+        final_cords[1] = [8888,8888]
+
+#the arm is exactly over the desired location, so we need to pick it up (or could happen when there is no
+# other red color on the screen)
+    elif coord_matrix[1] ==[] and distance_between_red_and_green == 8888:
+        final_cords[1] = [8888,8888]
+
+#arm is over the desired location, pick it up BUT there are more reds around
+   
     else:  #as long as the shape is visible
         final_cords[1] = coord_matrix[1]
 

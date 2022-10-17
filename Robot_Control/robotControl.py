@@ -25,6 +25,9 @@ class servo:
         print("servo_id:", self.servo_id, "\nMin Angle: ", self.minAngle, "\nMax Angle: ", self.maxAngle, "\nMin Position:", self.minPosition, "\nMax Position: ", self.maxPosition, "\nCurrent Angle: ", self.currentAngle)
 
     def move(self, newAngle):
+
+        oldAngle = self.currentAngle
+
         if self.debug: self.info()
         tmp = newAngle - self.minAngle
         if self.flip_angle_direction:
@@ -43,6 +46,10 @@ class servo:
         if self.debug:
             print('End the communication to move servo')
         self.currentAngle = newAngle
+
+        sleepTime = 0.3 * abs(newAngle - oldAngle)
+        if (self.verbose): print("Sleeping for " + str(sleepTime) + " seconds")
+        time.sleep(sleepTime)
             
         return 0
         

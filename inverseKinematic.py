@@ -82,6 +82,10 @@ class direction(robot):
          sm.solve(disp=False)
       except:
          return -1
+      if (self.verbose):
+         print("BBBBBBBBBBBB")
+         print("Inverse kinematic equation solution found, moving servos...")
+         print("BBBBBBBBBBBB")
          # solve
       # print([theta__1.value[0],theta__2.value[0],theta__3.value[0]]) # print solution
       self.hubert.move('body',theta__1.value[0])
