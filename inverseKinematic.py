@@ -5,10 +5,12 @@ from Robot_Control.robotControl import robot
 
 class direction(robot):
    
-   def __init__(self, hubert, vector_length, verbose, debug):
+   def __init__(self, hubert, z_lower, z_upper, verbose, debug):
       self.m = GEKKO()
-      #self.step = 0.03
-      self.vector_length = vector_length #not in use atm
+
+      self.z_lower = z_lower
+      self.z_upper = z_upper
+
       self.verbose = verbose
       self.debug = debug
 
@@ -29,9 +31,12 @@ class direction(robot):
       # R = np.array(((c, -s), (s, c)))
       # self.vectorDir = R.dot(self.vectorDir)
       # normalization of the vector and step of 2 cm
+      
+      
+      #self.step = np.linalg.norm(self.vectorDir)
       self.step = np.linalg.norm(self.vectorDir) * 0.08 / 0.35
-      if self.step >= 0.04:
-         self.step = 0.03
+      if self.step >= 0.06:
+         self.step = 0.05
       self.vectorDir = self.vectorDir/np.linalg.norm(self.vectorDir) * self.step
       
       if self.verbose:
@@ -62,19 +67,21 @@ class direction(robot):
       # lower bounds
       x.LOWER = self.posArm[0] + self.vectorDir[0]-self.error
       y.LOWER = self.posArm[1] + self.vectorDir[1]-self.error
-      z.LOWER = 0.14
+      #z.LOWER = 0.14
+      z.LOWER = self.z_lower
 
       # upper bounds
       x.UPPER = self.posArm[0] + self.vectorDir[0]+self.error
       y.UPPER = self.posArm[1] + self.vectorDir[1]+self.error
-      z.UPPER = 0.16
+      #z.UPPER = 0.16
+      z.UPPER = self.z_upper
       
        # equation 
       sm.Equations([
          ((0.204*sm.sin(theta__3) + 0.015)*sm.cos(theta__2) + (0.204*sm.cos(theta__3) + 0.088)*sm.sin(theta__2) + 0.034)*sm.cos(theta__1) + 0.103*sm.sin(theta__1) - x==0, 
          ((0.204*sm.sin(theta__3) + 0.015)*sm.cos(theta__2) + (0.204*sm.cos(theta__3) + 0.088)*sm.sin(theta__2) + 0.034)*sm.sin(theta__1) - 0.103*sm.cos(theta__1) - y==0,
          (-0.204*sm.cos(theta__3) - 0.088)*sm.cos(theta__2) + (0.204*sm.sin(theta__3) + 0.015)*sm.sin(theta__2) + 0.360 - z==0
-         ]) 
+         ])
 
       # m.options.MAX_ITER = 20
       # m.options.OTOL = 1.0e-3

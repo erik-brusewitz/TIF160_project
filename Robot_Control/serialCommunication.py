@@ -62,6 +62,7 @@ def send_package(cap, arduino, data, verbose, debug):
 
 def initialize_communication(cap, arduino, verbose, debug):
     print("Establishing serial communication...")
+    time.sleep(2)
     for i in range(5):
         if (send_package(cap, arduino, "99999", verbose, debug)):
             print("Serial communication established")

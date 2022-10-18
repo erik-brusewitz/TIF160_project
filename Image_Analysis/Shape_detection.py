@@ -5,27 +5,34 @@ import cv2, math
 from Image_Analysis.color_detection import *
 #from color_detection import * #for ash's local computer
 
-def Shape_dectection(cap,shape,pick_up,search_for_shape, verbose,debug):
+def Shape_dectection(cap, shape, search_for_shape, verbose, debug):
     #If pick_up is 1, then the camera should find a shape to pick up
     #If pick_up is 0, the camera should find the container coordinates (centre)
     if not cap.isOpened():
         print("Cannot open camera")
         return -1
 
-    
     ret, frame = cap.read()
-    
-    #cv2.imwrite("preview.jpg", frame)
+    cv2.waitKey(1)
+    ret, frame = cap.read()
+    cv2.waitKey(1)
+    ret, frame = cap.read()
+    cv2.waitKey(1)
+    ret, frame = cap.read()
+    cv2.imshow('shapes', frame)
+    cv2.waitKey(1)
+    ret, frame = cap.read()
+    cv2.waitKey(1)
+    ret, frame = cap.read()
+    cv2.waitKey(1)
+    cv2.imshow('shapes', frame)
+    ret, frame = cap.read()
+    cv2.waitKey(1)
     
     # if frame is read correctly ret is True
     if not ret:
         print("Can't receive frame (stream end?)")
         return -1
-
-    # cv2.imshow('shapes', frame)
-    # if cv2.waitKey(1) == ord('q'):
-    #     print("Camera exited manually")
-    #     return -1
 
     ret, frame = cap.read()
     cv2.imshow('shapes', frame)
@@ -116,45 +123,31 @@ def Shape_dectection(cap,shape,pick_up,search_for_shape, verbose,debug):
         else:
             return True
 
-    #print("the op matrix is:" , coord_matrix)    
-    #final_cords = arm + destination_matrix [1x2]
     final_cords = [[], []]
     final_cords[0] = arm_coord
     
     if (debug): print("The distance_between_red_and_green " + str(distance_between_red_and_green)) 
 
+    threshhold1 = 0.3 #old = 0.25
+    threshhold2 = 0.3 #old 0.3
     if coord_matrix[1] == []:
         #once shape stops being recognized, we first check for nearest red color
-        if distance_between_red_and_green <=0.25:
+        if distance_between_red_and_green <= threshhold1:
             final_cords[1] = coord_matrix[2]
-        #we want to ognore the red from another shape, so any dist more than 0.25 should be avoided/cancelled
-        elif distance_between_red_and_green > 0.3:
+        #we want to ignore the red from another shape, so any dist more than 0.25 should be avoided/cancelled
+        elif distance_between_red_and_green > threshhold2:
             final_cords[1] = [8888,8888]
-
-        #the arm is exactly over the desired location, so we need to pick it up (or could happen when there is no
-        # other red color on the screen)
-        elif distance_between_red_and_green == 8888:
-            final_cords[1] = [8888,8888]
-
+        #This part should never be executed. If it is, debugging is needed
         else:
             if (verbose): print("Big error :(")
             final_cords[1] = [6666,6666]
 
-#arm is over the desired location, pick it up BUT there are more reds around
-   
     else:  #as long as the shape is visible
         final_cords[1] = coord_matrix[1]
 
-    #cv2.imshow('shapes', frame)
-    
-    #if q is pressed with focus on the camera window, the program is stopped.
-    #This line is required for the camera window to work, otherwise it crashes.
-    #It does not matter what is inside the if statement, the important line is the if statement itself.
-    if cv2.waitKey(1) == ord('q'):
-        print("Camera exited manually")
-        return -1
-        
-    #print("Three dims: ", coord_matrix)
+    cv2.imshow('shapes', frame)
+    cv2.waitKey(1)
+
     if verbose:
         print("Returning object coordinates: ", final_cords)
 

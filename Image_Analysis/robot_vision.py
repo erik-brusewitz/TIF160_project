@@ -39,41 +39,33 @@ def Initialize_camera(verbose, debug):
         exit()
         
     return cap
-    
 
-def Search_for_shape(cap, shape, verbose, debug):
-    pick_up = False
+def program_exit(cap):
+     print("Failed to get shape coordinates")
+     print("Exiting program")
+     cap.release()
+     cv2.destroyAllWindows()
+     exit()
+
+
+def is_shape_detected(cap, shape, verbose, debug):
     search_for_shape = True
-    return Shape_dectection(cap, shape, pick_up, search_for_shape, verbose, debug)
+    return Shape_dectection(cap, shape, search_for_shape, verbose, debug)
 
+
+#Return codes from Shape_detection:
+# return = -1: camera is not opened or if frame is read incorrectly. Should close the program
+# return = True/False: Used for "is shape detected"
+# return = 444: hand not found. Search for hand must be run
+# return[1] = [6666,6666]: big error. Search for shape should be run
+# return[1] = [8888,8888]: Shape not visible and no close red colors. Shape should be picked up
 
 def get_shape_coordinates(cap, shape, verbose, debug):
-    pick_up = True
     search_for_shape = False
-    coord_matrix = Shape_dectection(cap, shape, pick_up, search_for_shape, verbose, debug)
+    coord_matrix = Shape_dectection(cap, shape, search_for_shape, verbose, debug)
     if (verbose): print(coord_matrix)
-
-    if coord_matrix[1] == [6666,6666]:
-        Search_for_shape(cap, shape, verbose, debug)
-    # if (coord_matrix == [9999,9999]):
-        # print("Failed to get shape coordinates")
-        # print("Exiting program")
-        # cap.release()
-        # cv2.destroyAllWindows()
-        # exit()
     
-    return coord_matrix
-    
-#at the moment, this is the same as the get_shape_coordinates. Should probably be changed a bit so the robot can differentiate shapes from containers.
-def get_container_coordinates(cap, shape, verbose, debug):
-    pick_up = False
-    search_for_shape = False
-    coord_matrix = Shape_dectection(cap, shape, pick_up, search_for_shape,verbose, debug)
-    # if (coord_matrix == [9999,9999]):
-        # print("Failed to get container coordinates")
-        # print("Exiting program")
-        # cap.release()
-        # cv2.destroyAllWindows()
-        # exit()
+    if coord_matrix == -1:
+        program_exit()
     
     return coord_matrix
