@@ -23,17 +23,7 @@ class direction(robot):
    def __vector(self):
       self.vectorDir[0] = self.camera_posShape[0] - self.camera_posArm[0] 
       self.vectorDir[1] = self.camera_posShape[1] - self.camera_posArm[1]
-      # the vector has to be rotated in the absolute reference frame because now is expressed in the camera reference frame 
-      # head_angle = self.hubert.get_angle('head')
-      # body_angle = self.hubert.get_angle('body')
-      # theta = body_angle - pi/2# + head angle in case we move it 
-      # c, s = np.cos(theta), np.sin(theta)
-      # R = np.array(((c, -s), (s, c)))
-      # self.vectorDir = R.dot(self.vectorDir)
-      # normalization of the vector and step of 2 cm
       
-      
-      #self.step = np.linalg.norm(self.vectorDir)
       self.step = np.linalg.norm(self.vectorDir) * 0.08 / 0.35
       if self.step >= 0.06:
          self.step = 0.05
@@ -42,6 +32,17 @@ class direction(robot):
       if self.verbose:
          print("Directional vector = (" + str(self.vectorDir[0]) + ", " + str(self.vectorDir[1]) + ")")
          print("Step = " + str(self.step))
+
+      # the vector has to be rotated in the absolute reference frame because now is expressed in the camera reference frame 
+      # head_angle = self.hubert.get_angle('head')
+      body_angle = self.hubert.get_angle('body')
+      theta = body_angle - pi/2# + head angle in case we move it 
+      c, s = np.cos(theta), np.sin(theta)
+      R = np.array(((c, -s), (s, c)))
+      self.vectorDir = R.dot(self.vectorDir)
+      if self.verbose:
+         print("Angle: " + str(theta))
+         print("Directional vector = (" + str(self.vectorDir[0]) + ", " + str(self.vectorDir[1]) + ")")
 
    def __function(self):#,z):
       sm = self.m
