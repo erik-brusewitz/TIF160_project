@@ -65,8 +65,8 @@ class grip(robot):
          # solve
       # print([theta__1.value[0],theta__2.value[0],theta__3.value[0]]) # print solution
       self.hubert.move('body',theta__1.value[0])
-      self.hubert.move('shoulder',theta__2.value[0])
       self.hubert.move('elbow',theta__3.value[0])
+      self.hubert.move('shoulder',theta__2.value[0])
       self.hubert.move("gripper", 0.9)
 
    def __kinematic(self):

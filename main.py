@@ -1,5 +1,3 @@
-#import Robot_Control.instructions as instructions
-#import Robot_Control.instructions.vision as vision
 from Robot_Control import instructions
 from Image_Analysis import robot_vision as vision
 import argparse
@@ -36,13 +34,11 @@ def main():
     args = parser.parse_args()
 
     verbose = args.verbose
-    debug = args.debug
-    
+    debug = args.debug 
     if verbose:
         print("Verbose printing")
     if debug:
         print("Debug printing")
-    
     if args.port:
         serial_port = args.port
         print("Serial port is set to " + serial_port)   
@@ -51,18 +47,11 @@ def main():
         serial_port = "/dev/ttyACM0"
 
     cap = vision.Initialize_camera(verbose, debug) 
-    if verbose:
-        print("Camera initialization successful")
-
     hubert = instructions.initialize_robot(cap, serial_port, verbose, debug)
-    if verbose:
-        print("Robot initialization successful")
-    
     #camera_test(cap)
     #set_position(hubert)
 
-    instructions.set_default_position(hubert)
-    
+    instructions.set_default_position(hubert)  
     shapes = ["Quadrilateral", "Pentagon", "Hexagon"]
     print("Searching for the shapes...")
     for shape in shapes:

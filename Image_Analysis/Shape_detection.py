@@ -126,16 +126,18 @@ def Shape_dectection(cap, shape, search_for_shape, verbose, debug):
     final_cords = [[], []]
     final_cords[0] = arm_coord
     
-    if (debug): print("The distance_between_red_and_green " + str(distance_between_red_and_green)) 
+    if (verbose): print("The distance_between_red_and_green " + str(distance_between_red_and_green)) 
 
     threshhold1 = 0.3 #old = 0.25
     threshhold2 = 0.3 #old 0.3
     if coord_matrix[1] == []:
         #once shape stops being recognized, we first check for nearest red color
         if distance_between_red_and_green <= threshhold1:
+            if verbose: print("Red color close")
             final_cords[1] = coord_matrix[2]
         #we want to ignore the red from another shape, so any dist more than 0.25 should be avoided/cancelled
         elif distance_between_red_and_green > threshhold2:
+            if verbose: print("Red color far away")
             final_cords[1] = [8888,8888]
         #This part should never be executed. If it is, debugging is needed
         else:
@@ -148,7 +150,6 @@ def Shape_dectection(cap, shape, search_for_shape, verbose, debug):
     cv2.imshow('shapes', frame)
     cv2.waitKey(1)
 
-    if verbose:
-        print("Returning object coordinates: ", final_cords)
+    if verbose: print("Returning object coordinates: ", final_cords)
 
     return(final_cords)

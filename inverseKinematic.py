@@ -41,6 +41,7 @@ class direction(robot):
       
       if self.verbose:
          print("Directional vector = (" + str(self.vectorDir[0]) + ", " + str(self.vectorDir[1]) + ")")
+         print("Step = " + str(self.step))
 
    def __function(self):#,z):
       sm = self.m

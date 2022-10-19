@@ -38,6 +38,7 @@ def Initialize_camera(verbose, debug):
         print("Exiting program...")
         exit()
         
+    print("Camera initialization successful")
     return cap
 
 def program_exit(cap):
@@ -63,8 +64,7 @@ def is_shape_detected(cap, shape, verbose, debug):
 def get_shape_coordinates(cap, shape, verbose, debug):
     search_for_shape = False
     coord_matrix = Shape_dectection(cap, shape, search_for_shape, verbose, debug)
-    if (verbose): print(coord_matrix)
-    
+
     if coord_matrix == -1:
         program_exit()
     

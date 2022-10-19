@@ -17,6 +17,7 @@ def initialize_robot(cap, serial_port, verbose, debug):
         print("Exiting program...")
         exit()
     rob.sc.initialize_communication(cap, arduino, verbose, debug)
+    print("Robot initialization successful")
     return rob.robot(cap, arduino, verbose, debug)
 
 def set_default_position(hubert):
@@ -81,15 +82,17 @@ def move_arm_to_shape(hubert, cap, shape, verbose, debug):
         if (shape_coordinates == [8888,8888]): #shape found
             print("Position of " + shape + " reached!")
             return True
-
         if (move_hand_to_position(hubert, hand_coordinates, shape_coordinates, verbose, debug)):
             print("Small movement successful!")
         else:
             print("Moving arm failed")
             print("Adjusting position slightly and trying again...")
-            close_pos = hand_coordinates.copy() * 0.95
+            close_pos = hand_coordinates.copy()
+            close_pos[0] = hand_coordinates[0] * 0.95
+            close_pos[1] = hand_coordinates[1] * 0.95
             if not move_hand_to_position(hubert, hand_coordinates, close_pos, verbose, debug):
-                close_pos = hand_coordinates.copy() * 1.1
+                close_pos[0] = hand_coordinates[0] * 1.1
+                close_pos[1] = hand_coordinates[1] * 1.1
                 move_hand_to_position(hubert, hand_coordinates, close_pos, verbose, debug)
 
 
@@ -98,8 +101,8 @@ def move_hand_to_position(hubert, hand_pos, target_pos, verbose, debug):
     if debug: print("Hand at position (" + str(hand_pos[0]) + ", " + str(hand_pos[1]) + ")\nTarget position: (" + str(target_pos[0]) + ", " + str(target_pos[1]) + ")")
 
     vector_length = 2
-    z_lower = 0.14
-    z_upper = 0.17
+    z_lower = 0.16
+    z_upper = 0.18
     dirc = direction(hubert, z_lower, z_upper, verbose, debug)
 
     error_values = [0.01, 0.02, 0.03, 0.005, 0.001, 0.0001]
@@ -134,8 +137,8 @@ def grip_shape(hubert, shape, verbose, debug):
 
 def move_arm_and_drop_shape_in_container(hubert, shape, verbose, debug):
     print("Moving shape to container for " + shape + "...")
-    hubert.move("elbow", -50*pi/180)
     hubert.move("shoulder", 88*pi/180)
+    hubert.move("elbow", -50*pi/180)
 
     if (shape == "Quadrilateral"):
         hubert.move("body", 50*pi/180)
