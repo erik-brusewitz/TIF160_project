@@ -5,7 +5,9 @@ from Image_Analysis import robot_vision as vision
 import argparse
 import time
 import cv2
+from math import*
 
+#Used strictly for debugging
 def camera_test(cap):
     while True:
         ret, frame = cap.read()
@@ -13,8 +15,15 @@ def camera_test(cap):
         if cv2.waitKey(1) == ord('q'):
             print("Camera exited manually")
             return -1
-#         time.sleep(0.01)
+        #time.sleep(0.01)
         
+#Used strictly for debugging
+def set_position(hubert):
+    print("Setting Hubert to position...")
+    hubert.move("body", 10*pi/180)
+    hubert.move("elbow", -50*pi/180)
+    hubert.move("shoulder", 88*pi/180)
+    time.sleep(100)
 
 
 def main():
@@ -50,6 +59,7 @@ def main():
         print("Robot initialization successful")
     
     #camera_test(cap)
+    #set_position(hubert)
 
     instructions.set_default_position(hubert)
     

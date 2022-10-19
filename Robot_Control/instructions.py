@@ -28,6 +28,7 @@ def set_default_position(hubert):
     hubert.move("gripper", 0)
     hubert.move("head", pi/2)
 
+
 def search_for_shape(hubert, shape, cap, verbose, debug):
     if not vision.is_shape_detected(cap, shape, verbose, debug):
         print("Shape not detected!")
@@ -83,7 +84,14 @@ def move_arm_to_shape(hubert, cap, shape, verbose, debug):
 
         if (move_hand_to_position(hubert, hand_coordinates, shape_coordinates, verbose, debug)):
             print("Small movement successful!")
-        
+        else:
+            print("Moving arm failed")
+            print("Adjusting position slightly and trying again...")
+            close_pos = hand_coordinates.copy() * 0.95
+            if not move_hand_to_position(hubert, hand_coordinates, close_pos, verbose, debug):
+                close_pos = hand_coordinates.copy() * 1.1
+                move_hand_to_position(hubert, hand_coordinates, close_pos, verbose, debug)
+
 
 def move_hand_to_position(hubert, hand_pos, target_pos, verbose, debug):
     if verbose: print("Moving hand...")
@@ -103,11 +111,7 @@ def move_hand_to_position(hubert, hand_pos, target_pos, verbose, debug):
         else:
             if verbose: print("Solution found!")
             return True
-    sleep_time = 8
-    print("Moving arm failed")
-    print("Try moving the shape closer to the robot. Pausing for " + str(sleep_time) + " seconds.")
-    time.sleep(sleep_time)
-    print("trying again...")
+
     return False
 
 
@@ -134,17 +138,17 @@ def move_arm_and_drop_shape_in_container(hubert, shape, verbose, debug):
     hubert.move("shoulder", 88*pi/180)
 
     if (shape == "Quadrilateral"):
-        hubert.move("body", 10*pi/180)
-        hubert.move("elbow", 60*pi/180)
-        hubert.move("shoulder", -20*pi/180)
-    elif (shape == "Pentagon"):
-        hubert.move("body", 30*pi/180)
-        hubert.move("elbow", 60*pi/180)
-        hubert.move("shoulder", -20*pi/180)
-    elif (shape == "Hexagon"):
         hubert.move("body", 50*pi/180)
-        hubert.move("elbow", 60*pi/180)
-        hubert.move("shoulder", 0*pi/180)
+        hubert.move("elbow", 0*pi/180)
+        hubert.move("shoulder", 50*pi/180)
+    elif (shape == "Pentagon"):
+        hubert.move("body", 35*pi/180)
+        hubert.move("elbow", -50*pi/180)
+        hubert.move("shoulder", 88*pi/180)
+    elif (shape == "Hexagon"):
+        hubert.move("body", 10*pi/180)
+        hubert.move("elbow", -50*pi/180)
+        hubert.move("shoulder", 88*pi/180)
     else:
         print("Invalid shape, exiting...")
         return False
@@ -153,14 +157,10 @@ def move_arm_and_drop_shape_in_container(hubert, shape, verbose, debug):
     hubert.move("gripper", 0)
     return True
 
-    
 def get_shape(cap, hubert, shape, verbose, debug):
-    
     print("Initializing search for " + shape + "...")
 
-    if vision.get_shape_coordinates(cap, shape, verbose, debug) == 444:
-        search_for_hand
-
+    search_for_hand(hubert, cap, shape, verbose, debug)
     search_for_shape(hubert, shape, cap, verbose, debug)
     move_arm_and_grab_shape(hubert, cap, shape, verbose, debug)
     move_arm_and_drop_shape_in_container(hubert, shape, verbose, debug)
