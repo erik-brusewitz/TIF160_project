@@ -19,6 +19,18 @@ class grip(robot):
 
       self.hubert = hubert
 
+   def __vector(self):
+         self.vectorDir[0] = 0 
+         self.vectorDir[1] = 0.01
+
+         # the vector has to be rotated in the absolute reference frame because now is expressed in the camera reference frame 
+         # head_angle = self.hubert.get_angle('head')
+         body_angle = self.hubert.get_angle('body')
+         theta = body_angle - pi/2# + head angle in case we move it 
+         c, s = np.cos(theta), np.sin(theta)
+         R = np.array(((c, -s), (s, c)))
+         self.vectorDir = R.dot(self.vectorDir)
+
    def __function(self):#,z):
       sm = self.m
 
@@ -37,19 +49,19 @@ class grip(robot):
       theta__3.UPPER = 35*pi/180
 
       # Variables
-      x = sm.Var(value=self.posArm[0])
-      y = sm.Var(value=self.posArm[1])
-      z = sm.Var(0.1325)
+      x = sm.Var(value=self.posArm[0]+self.vectorDir[0])
+      y = sm.Var(value=self.posArm[1]+self.vectorDir[1])
+      z = sm.Var(0.1375)
 
       # lower bounds
-      x.LOWER = self.posArm[0]-self.error
-      y.LOWER = self.posArm[1]-self.error
-      z.LOWER = 0.135
+      x.LOWER = self.posArm[0]+self.vectorDir[0]-self.error
+      y.LOWER = self.posArm[1]+self.vectorDir[1]-self.error
+      z.LOWER = 0.1375
 
       # upper bounds
-      x.UPPER = self.posArm[0]+self.error
-      y.UPPER = self.posArm[1]+self.error
-      z.UPPER = 0.14
+      x.UPPER = self.posArm[0]+self.vectorDir[0]+self.error
+      y.UPPER = self.posArm[1]+self.vectorDir[1]+self.error
+      z.UPPER = 0.1425
       
        # equation 
       sm.Equations([
@@ -92,6 +104,7 @@ class grip(robot):
       self.m.clear()
       self.error = error
       #self.angle = angle # in the final code will be taken from the robot class
+      self.__vector()
 
       # extract the value from the object robot 
       self.__kinematic()

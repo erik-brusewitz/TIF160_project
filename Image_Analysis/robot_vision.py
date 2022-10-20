@@ -7,7 +7,9 @@ def Initialize_camera(verbose, debug):
     #cap = cv2.VideoCapture(-1,cv2.CAP_DSHOW) #cv2.CAP_DSHOW is used to reduce the time taken to open the ext. camera
     cap = cv2.VideoCapture(1,cv2.CAP_DSHOW) #cv2.CAP_DSHOW is used to reduce the time taken to open the ext. camera
     cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
-
+    cap.set(cv2.CAP_PROP_AUTOFOCUS, 0)
+    focus = 40  # min: 0, max: 255, increment:5
+    cap.set(28, focus)
     if not cap.isOpened():
         if verbose:
             print("Failed, trying capture settings: ''-1,cv2.CAP_DSHOW''")

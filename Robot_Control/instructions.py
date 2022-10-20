@@ -122,7 +122,7 @@ def grip_shape(hubert, shape, verbose, debug):
     print("Gripping " + shape + "...")
 
     grp = grip(hubert, verbose, debug)
-    error_values = [0.01, 0.02, 0.03, 0.005, 0.001, 0.0001]
+    error_values = [0.005, 0.01, 0.02, 0.03]
 
     for i in range(len(error_values)):
         if (verbose): print("Trying to find solution for error value " + str(error_values[i]))

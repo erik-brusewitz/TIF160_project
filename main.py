@@ -10,6 +10,7 @@ def camera_test(cap):
     while True:
         ret, frame = cap.read()
         cv2.imshow('shapes', frame)
+        
         if cv2.waitKey(1) == ord('q'):
             print("Camera exited manually")
             return -1
@@ -44,7 +45,7 @@ def main():
         print("Serial port is set to " + serial_port)   
     else:
         print("Port not set, defaulting to /dev/ttyACM0")
-        serial_port = "/dev/ttyACM0"
+        serial_port = "/COM7"
 
     cap = vision.Initialize_camera(verbose, debug) 
     hubert = instructions.initialize_robot(cap, serial_port, verbose, debug)
