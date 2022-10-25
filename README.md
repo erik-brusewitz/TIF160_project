@@ -13,3 +13,6 @@ Optional ports:
 
 Both USB-cables have to be connected to your computer for the program to work (the webcam and the arduino).
 Remember to connect the arduino to the power adapter as well.
+
+
+ROBOT PRESENTATION LINK: https://www.youtube.com/watch?v=z7tvtX4B9Dw
